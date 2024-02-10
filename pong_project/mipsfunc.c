@@ -330,7 +330,7 @@ char * itoaconv( int num )
 Displays the menu that the game starts at
 */
 void displaySplashMenu ( void ) {
-  display_string(0, "1: Start");
+  display_string(0, "1: Play");
   display_string(1, "2: HiScores");
   display_string(2, "3: Options");
   display_string(3, "4: Back");

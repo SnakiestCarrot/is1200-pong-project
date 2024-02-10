@@ -98,7 +98,7 @@ void gameLoop ( void ) {
 
       // Right paddle and ball collision detection
       int ballPaddleXCollide = (paddleR.posX - 1 <= gameBall1.posX && paddleR.posX + 2 >= gameBall1.posX);
-      int ballPaddleYCollide = ((paddleR.posY <= gameBall1.posY) && (paddleR.posY + paddleR.height) >= gameBall1.posY);
+      int ballPaddleYCollide = ((paddleR.posY - 1 <= gameBall1.posY) && (paddleR.posY + paddleR.height + 1) >= gameBall1.posY);
       int ballPaddleCollision = ballPaddleXCollide && ballPaddleYCollide;
 
       if (ballPaddleCollision) {
