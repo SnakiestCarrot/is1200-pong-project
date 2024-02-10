@@ -356,13 +356,39 @@ void displayOptionsMenu ( void ) {
   display_update();
 }
 
+void displayCountdown ( void ) {
+  displayClr();
+
+  display_string(0, "    Game will");
+  display_string(1, "    start in:");
+  display_string(2, "        3");
+  display_string(3, "");
+  display_update();
+
+  quicksleep(6000000);
+
+  display_string(2, "        2");
+  display_update();
+
+  quicksleep(6000000);
+
+  display_string(2, "        1");
+  display_update();
+
+  quicksleep(6000000);
+
+  displayClr();
+}
+
 int menuState = 0;
 int splashMenu = 0;
 int hiScoreMenu = 2;
 int optionsMenu = 3;
 
-/*
+/* menuHandler:
   Handles menu state and enters the game loop
+
+  Written by Casper Johansson
 */
 void menuHandler ( void ) {
   
@@ -370,6 +396,7 @@ void menuHandler ( void ) {
     Splash menu cases
   */
   if (btn1pressed() && menuState == splashMenu) {
+    displayCountdown();
     gameLoop();
   }
 

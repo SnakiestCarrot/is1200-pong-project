@@ -66,7 +66,7 @@ void gameLoop ( void ) {
   paddleR.speedY = 0;
   paddleR.height = defaultPaddleHeight; 
   
-  while (getsw() != 0xf) {
+  while (getsw() != 0x1) {
 
     // usage of the timer from lab 3
     if (IFS(0) & 0x100) {
@@ -137,6 +137,9 @@ void gameLoop ( void ) {
     
     
   }
+
+  displaySplashMenu();
+  menuState = 0;
 }
 
 

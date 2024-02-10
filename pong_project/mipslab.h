@@ -73,6 +73,8 @@ extern const uint8_t clearedBuffer[128*4];
 
 /* More functions from mipsfunc.c */
 
+extern int menuState;
+
 /* displayPixel:
 
    Writes a pixel into displayBuffer, at position xPos and yPos on the OLED screen
