@@ -18,9 +18,6 @@ volatile int* trisE;
 volatile int* portE;
 
 int timeoutcount = 0;
-
-int prime = 0000000;
-
 int mytime = 0x5957;
 
 char textstring[] = "text, more text, and even more text!";
@@ -28,19 +25,7 @@ char textstring[] = "text, more text, and even more text!";
 /* Interrupt Service Routine */
 void user_isr( void )                   // called from vectors.S which handles interrupts
 {
-  if (IFS(0) & 0x100) {
-    timeoutcount++;
-    IFSCLR(0) = 0x100; // answer to question 1
-  }
-
-  if (timeoutcount == 10) {
-    time2string( textstring, mytime );
-    display_string( 3, textstring );
-    display_update();
-    tick( &mytime );
-    (*portE)++;
-    timeoutcount = 0;
-  }
+  return;
 }
 
 /* Lab-specific initialization goes here */
@@ -49,31 +34,29 @@ void labinit( void )
   // port E init
   trisE = (volatile int*) 0xbf886100;
   portE = (volatile int*) 0xbf886110;
-  *trisE = ~(0xff);                   // set first 8 bits as output
-  *portE = *portE & ~(0xff);
+  TRISE = ~(0xff);                   // set first 8 bits as output
+  PORTE = PORTE & ~(0xff);
 
   // port D init
   TRISDSET = 0xfe0;
 
   // timer initialize
   T2CON = 0x0;         // clear all in T2CON
-  PR2 = 31250;         // set value when to throw interrupt
+  PR2 = 5208;         // set value when to throw interrupt, 5208 gives 60 hz with 1:256 scaling
   T2CONSET = 0x70;     // set scaling to 1:256
   T2CONSET = 0x08000;  // start clock
 
-  IECSET(0) = 0x100;    // interrupt enable control
-
-  IPCSET(2) = 0x11;     // interrupt priority control
-
-  enable_interrupt();
+  displaySplashMenu();
 }
 
 /* This function is called repetitively from the main program */
 void labwork( void )
 {
-  prime = nextprime( prime );
-  display_string(0, itoaconv(prime));
-  display_update();
+  menuHandler();
+  if (timeoutcount == 1) {
+    tick( &mytime );
+    timeoutcount = 0;
+  }
 }
 
 

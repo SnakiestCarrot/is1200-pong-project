@@ -53,3 +53,18 @@ void time2string( char *, int );
 int getbtns(void);
 int getsw(void);
 void enable_interrupt(void);
+
+/* game-specific functions from gameLoop.c */
+void pongLoop ( void );
+void gameLoop ( void );
+
+/* Declarations from mipsdata.c */
+extern uint8_t displayBuffer[128*4];
+extern const uint8_t clearedBuffer[128*4];
+
+/* More functions from mipsfunc.c */
+void displayPixel ( int xPos, int yPos);
+void displayClr ( void );
+
+
+
