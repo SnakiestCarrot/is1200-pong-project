@@ -23,8 +23,8 @@ static void num32asc( char * s, int );
 #define DISPLAY_TURN_OFF_VDD (PORTFSET = 0x40)
 #define DISPLAY_TURN_OFF_VBAT (PORTFSET = 0x20)
 
-int pageWidth = 128;
-int pageHeight = 8;
+const int pageWidth = 128;
+const int pageHeight = 8;
 
 /* quicksleep:
    A simple function to create a small delay.
@@ -159,7 +159,7 @@ void display_image(int x, const uint8_t *data) {
 		DISPLAY_CHANGE_TO_DATA_MODE;
 		
 		for(j = 0; j < 128; j++)
-			spi_send_recv(~data[i*32 + j]);
+			spi_send_recv(~data[i*128 + j]);
 	}
 }
 
@@ -341,30 +341,48 @@ void displaySplashMenu ( void ) {
   Displays the menu for highscores
 */
 void displayHiScoreMenu ( void ) {
-  display_string(0, "ABC 123");
+  display_string(0, "ABC 123"); // placeholders for now
   display_string(1, "DEF 456");
   display_string(2, "ACE 321");
   display_string(3, "4: Back");
   display_update();
 }
 
+void displayOptionsMenu ( void ) {
+  display_string(0, "Option 1: "); // placeholders for now
+  display_string(1, "Option 2: ");
+  display_string(2, "Option 3: ");
+  display_string(3, "4: Back");
+  display_update();
+}
+
 int menuState = 0;
+int splashMenu = 0;
+int hiScoreMenu = 2;
+int optionsMenu = 3;
 
 /*
   Handles menu state and enters the game loop
 */
 void menuHandler ( void ) {
-  if (btn1pressed() && menuState == 0) {
+  
+  /*
+    Splash menu cases
+  */
+  if (btn1pressed() && menuState == splashMenu) {
     gameLoop();
   }
 
-  if (btn2pressed() && menuState == 0) {
-    menuState = 2;
+  if (btn2pressed() && menuState == splashMenu) {
+    menuState = hiScoreMenu;
     displayHiScoreMenu();
   }
 
-  if (btn4pressed() && menuState == 2) {
-    menuState = 0;
+  /*
+    Highscore menu cases
+  */
+  if (btn4pressed() && menuState == hiScoreMenu) {
+    menuState = splashMenu;
     displaySplashMenu();
   }
 }
@@ -372,6 +390,8 @@ void menuHandler ( void ) {
 /* 
   twoPower:
   takes an int y as input and returns 2^y
+
+  Made by Casper Johansson
 */
 int twoPower (int y) {
   int result = 0;
@@ -383,14 +403,14 @@ int twoPower (int y) {
 
 /*
   displayPixel:
-  Displays a pixel at the specified x and y coordinates on the OLED display
+  Writes a pixel into the display buffer at the specified x and y coordinates on the OLED display
 
   Made by Casper Johansson
 */
 void displayPixel (int xPos, int yPos) {
   
   /*
-    Would mean index is outside screen
+    Check for if index is outside screen
   */
   if (yPos < 0 || yPos >= 32 || xPos < 0 || xPos >= 128) {
     return;
@@ -400,22 +420,26 @@ void displayPixel (int xPos, int yPos) {
   
   if (yPos < 8) {
     yByte = twoPower(yPos);
-    displayBuffer[xPos] |= (!yByte);
+    displayBuffer[xPos] &= (~yByte);
   }
 
   if (yPos >= 8 && yPos < 16) {
     yByte = twoPower(yPos - pageHeight);
-    displayBuffer[xPos + pageWidth] |= (!yByte);
+    displayBuffer[xPos + pageWidth] &= (~yByte);
   }
 
   if (yPos >= 16 && yPos < 24) {
     yByte = twoPower(yPos - (pageHeight * 2));
-    displayBuffer[xPos + (pageWidth * 2)] |= (!yByte);
+    displayBuffer[xPos + (pageWidth * 2)] &= (~yByte);
   }
 
   if (yPos >= 24 && yPos < 32) {
     yByte = twoPower(yPos - (pageHeight * 3));
-    displayBuffer[xPos + (pageWidth * 3)] |= (!yByte);
+    displayBuffer[xPos + (pageWidth * 3)] &= (~yByte);
   }
   return;
+}
+
+void displayClr ( void ) {
+  *displayBuffer = *clearedBuffer;
 }

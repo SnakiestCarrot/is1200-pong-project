@@ -60,9 +60,11 @@ void gameLoop ( void );
 
 /* Declarations from mipsdata.c */
 extern uint8_t displayBuffer[128*4];
+extern const uint8_t clearedBuffer[128*4];
 
 /* More functions from mipsfunc.c */
 void displayPixel ( int xPos, int yPos);
+void displayClr ( void );
 
 
 
