@@ -394,11 +394,12 @@ void menuHandler ( void ) {
   Made by Casper Johansson
 */
 int twoPower (int y) {
-  int result = 0;
+  int result = 1;
   int i = 0;
   for (i = 1; i <= y; i++) {
     result *= 2;
   }
+  return result;
 }
 
 /*
@@ -440,6 +441,23 @@ void displayPixel (int xPos, int yPos) {
   return;
 }
 
+void displayBall (double ballX, double ballY) {
+  displayPixel(ballX, ballY);
+  displayPixel(ballX + 1, ballY);
+  displayPixel(ballX, ballY + 1);
+  displayPixel(ballX + 1, ballY + 1);
+}
+
+void displayPaddle (double paddleX, double paddleY) {
+  int i = 0;
+  for (i = 0; i < defaultPaddleHeight; i++) {
+    displayPixel(paddleX, paddleY + i);
+  }
+}
+
 void displayClr ( void ) {
-  *displayBuffer = *clearedBuffer;
+  int byte = 0;
+  for (byte = 0; byte < 512; byte++) {
+    displayBuffer[byte] = 255;
+  }
 }

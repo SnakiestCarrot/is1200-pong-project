@@ -54,17 +54,43 @@ int getbtns(void);
 int getsw(void);
 void enable_interrupt(void);
 
-/* game-specific functions from gameLoop.c */
-void pongLoop ( void );
+/* gameLoop:
+
+  Is the main game loop and houses the initilization of game entities,
+  handling of gamestate updates, display and displayBuffer writing
+
+  Probably want to split this into smaller chunks for better code
+
+   Written by Casper Johansson
+*/
 void gameLoop ( void );
+
+extern int defaultPaddleHeight;
 
 /* Declarations from mipsdata.c */
 extern uint8_t displayBuffer[128*4];
 extern const uint8_t clearedBuffer[128*4];
 
 /* More functions from mipsfunc.c */
-void displayPixel ( int xPos, int yPos);
+
+/* displayPixel:
+
+   Writes a pixel into displayBuffer, at position xPos and yPos on the OLED screen
+
+   IMPORTANT: It does not actually update the display, so displayImage(0, displayBuffer)
+   needs to be called in order to actually display the written pixels on the screen
+
+   Written by Casper Johansson
+*/
+void displayPixel ( int xPos, int yPos );
+
+/* displayClr:
+
+   Clears displayBuffer / sets all bits in displayBuffer to 1. (black screen)
+
+   Useful for after we have sent a displayBuffer to the screen, in order to remove any
+   leftovers from the previous game updates displayBuffer writes.
+
+   Written by Casper Johansson
+*/
 void displayClr ( void );
-
-
-
