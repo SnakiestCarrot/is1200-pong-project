@@ -23,6 +23,9 @@ static void num32asc( char * s, int );
 #define DISPLAY_TURN_OFF_VDD (PORTFSET = 0x40)
 #define DISPLAY_TURN_OFF_VBAT (PORTFSET = 0x20)
 
+int pageWidth = 128;
+int pageHeight = 8;
+
 /* quicksleep:
    A simple function to create a small delay.
    Very inefficient use of computing resources,
@@ -155,7 +158,7 @@ void display_image(int x, const uint8_t *data) {
 		
 		DISPLAY_CHANGE_TO_DATA_MODE;
 		
-		for(j = 0; j < 32; j++)
+		for(j = 0; j < 128; j++)
 			spi_send_recv(~data[i*32 + j]);
 	}
 }
@@ -321,4 +324,98 @@ char * itoaconv( int num )
   /* Since the loop always sets the index i to the next empty position,
    * we must add 1 in order to return a pointer to the first occupied position. */
   return( &itoa_buffer[ i + 1 ] );
+}
+
+/*displaySplashMenu:
+Displays the menu that the game starts at
+*/
+void displaySplashMenu ( void ) {
+  display_string(0, "1: Start");
+  display_string(1, "2: HiScores");
+  display_string(2, "3: Options");
+  display_string(3, "4: Back");
+  display_update();
+}
+
+/*displayHiScoreMenu:
+  Displays the menu for highscores
+*/
+void displayHiScoreMenu ( void ) {
+  display_string(0, "ABC 123");
+  display_string(1, "DEF 456");
+  display_string(2, "ACE 321");
+  display_string(3, "4: Back");
+  display_update();
+}
+
+int menuState = 0;
+
+/*
+  Handles menu state and enters the game loop
+*/
+void menuHandler ( void ) {
+  if (btn1pressed() && menuState == 0) {
+    gameLoop();
+  }
+
+  if (btn2pressed() && menuState == 0) {
+    menuState = 2;
+    displayHiScoreMenu();
+  }
+
+  if (btn4pressed() && menuState == 2) {
+    menuState = 0;
+    displaySplashMenu();
+  }
+}
+
+/* 
+  twoPower:
+  takes an int y as input and returns 2^y
+*/
+int twoPower (int y) {
+  int result = 0;
+  int i = 0;
+  for (i = 1; i <= y; i++) {
+    result *= 2;
+  }
+}
+
+/*
+  displayPixel:
+  Displays a pixel at the specified x and y coordinates on the OLED display
+
+  Made by Casper Johansson
+*/
+void displayPixel (int xPos, int yPos) {
+  
+  /*
+    Would mean index is outside screen
+  */
+  if (yPos < 0 || yPos >= 32 || xPos < 0 || xPos >= 128) {
+    return;
+  }
+
+  int yByte; // for storing yPos as a byte
+  
+  if (yPos < 8) {
+    yByte = twoPower(yPos);
+    displayBuffer[xPos] |= (!yByte);
+  }
+
+  if (yPos >= 8 && yPos < 16) {
+    yByte = twoPower(yPos - pageHeight);
+    displayBuffer[xPos + pageWidth] |= (!yByte);
+  }
+
+  if (yPos >= 16 && yPos < 24) {
+    yByte = twoPower(yPos - (pageHeight * 2));
+    displayBuffer[xPos + (pageWidth * 2)] |= (!yByte);
+  }
+
+  if (yPos >= 24 && yPos < 32) {
+    yByte = twoPower(yPos - (pageHeight * 3));
+    displayBuffer[xPos + (pageWidth * 3)] |= (!yByte);
+  }
+  return;
 }
