@@ -5,8 +5,8 @@
 
 Requirements:
 - Menu
-1 and 2 player modes
-Difficulty levels for AI
+- 1 and 2 player modes
+- Difficulty levels for AI
 - AI Higher priority, because of instructions
 
 Highscore list (volatile, min 3 capital initials)
