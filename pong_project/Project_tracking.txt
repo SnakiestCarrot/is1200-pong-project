@@ -4,18 +4,21 @@ Implemented:
         Ball and basic bouncing
         2-player mode
         Paddle and ball collisions
+        Player can select the speed of the paddle in the options menu
 
     Options menu:
         Implemented difficulty selection "Hard" or "Easy". Stored in difficulty variable. 0 for easy, 1 for hard
+        Select paddle speed
 
 
 Needs to be implemented:
     Gameplay:
         1-player mode with 2 AI Difficulties (menu is done, need the gameplay part)
-        Advanced bouncing, implementation is ready to go, but outcommented rn since I cant get math.h (sin, cos) to work
+        Advanced bouncing, implementation is almost ready to go (missing incoming trajectory part), but outcommented rn since I cant get math.h (sin, cos) to work
     
     Options menu:
         Menu to select 1 or 2 player mode
+
     
     Highscore menu:
         Highscore screen after 1-player game for name input, 3 letters
@@ -24,5 +27,9 @@ Needs to be implemented:
 Would be nice to do:
     Generally clean up the code, look at FIXME's. (Get the TODO Highlight extension for a better UX)
     Menu needs to have a better implementation, very ugly if-statement spam as of right now (it works I guess) menu.c
+
+Bugs:
+    Some weird bugs with collisions that are hard to reproduce, when ball hits top/bottom of paddle it goes inside the paddle
+    A bug when paddles are in a certain spot, the lower part of the paddle crossing over y = 16 and it doesnt display one pixel of the paddle
 
 

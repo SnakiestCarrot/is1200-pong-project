@@ -97,5 +97,29 @@ void displayPixel ( int xPos, int yPos );
 */
 void displayClr ( void );
 
-// for AI Difficulty level
+/*
+   Displays a credits screen for a few seconds
+*/
+void displayCredits( void );
+
+/*
+   for AI Difficulty level
+
+   0 = Easy 
+   1 = Hard
+*/
 extern int difficulty;
+
+/* for paddle speed
+   40.0 or 80.0 
+   can be toggled in the options menu
+*/
+extern double paddleSpeed;
+
+/* 
+   0 = 2-player mode 
+   1 = 1-player VS AI mode
+
+   can be toggled in the options menu
+*/
+extern int playerMode;

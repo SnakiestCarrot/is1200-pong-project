@@ -158,10 +158,10 @@ void gameLoop ( void ) {
 
       // Right paddle movement
       if (btn4pressed() && paddleR.posY > -1) {
-        paddleR.speedY = 45.0 / 60.0;
+        paddleR.speedY = paddleSpeed / 60.0;
       } 
       else if (btn3pressed() && (paddleR.posY + 4) < 32) {
-        paddleR.speedY = -45.0 / 60.0;
+        paddleR.speedY = -paddleSpeed / 60.0;
       } 
       else {
         paddleR.speedY = 0;
@@ -169,10 +169,10 @@ void gameLoop ( void ) {
 
       // Left paddle movement
       if (btn2pressed() && paddleL.posY > -1) {
-        paddleL.speedY = 45.0 / 60.0;
+        paddleL.speedY = paddleSpeed / 60.0;
       } 
       else if (btn1pressed() && (paddleL.posY + 4) < 32) {
-        paddleL.speedY = -45.0 / 60.0;
+        paddleL.speedY = -paddleSpeed / 60.0;
       } 
       else {
         paddleL.speedY = 0;

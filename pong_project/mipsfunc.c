@@ -402,3 +402,12 @@ void displayClr ( void ) {
     displayBuffer[byte] = 255;
   }
 }
+
+void displayCredits ( void ) {
+  display_string(0, "Made by:");
+  display_string(1, "August Wikdahl");
+  display_string(2, "Casper");
+  display_string(3, "Johansson");
+  display_update();
+  quicksleep(40000000);
+}
