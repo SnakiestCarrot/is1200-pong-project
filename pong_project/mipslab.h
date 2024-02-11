@@ -72,7 +72,7 @@ extern uint8_t displayBuffer[128*4];
 extern const uint8_t clearedBuffer[128*4];
 
 /* More functions from mipsfunc.c */
-
+void menuHandler ( void );
 extern int menuState;
 
 /* displayPixel:
@@ -96,3 +96,6 @@ void displayPixel ( int xPos, int yPos );
    Written by Casper Johansson
 */
 void displayClr ( void );
+
+// for AI Difficulty level
+extern int difficulty;

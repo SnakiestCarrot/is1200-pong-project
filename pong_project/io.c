@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <pic32mx.h>
 #include "mipslab.h"
+#include <math.h>
 
 // returns switch 1-4 in bits 0-3
 /*getsw:

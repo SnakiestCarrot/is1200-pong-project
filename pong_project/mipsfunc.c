@@ -7,6 +7,7 @@
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
 #include "mipslab.h"  /* Declatations for these labs */
+#include <math.h>
 
 /* Declare a helper function which is local to this file */
 static void num32asc( char * s, int ); 
@@ -326,93 +327,6 @@ char * itoaconv( int num )
   return( &itoa_buffer[ i + 1 ] );
 }
 
-/*displaySplashMenu:
-Displays the menu that the game starts at
-*/
-void displaySplashMenu ( void ) {
-  display_string(0, "1: Play");
-  display_string(1, "2: HiScores");
-  display_string(2, "3: Options");
-  display_string(3, "4: Back");
-  display_update();
-}
-
-/*displayHiScoreMenu:
-  Displays the menu for highscores
-*/
-void displayHiScoreMenu ( void ) {
-  display_string(0, "ABC 123"); // placeholders for now
-  display_string(1, "DEF 456");
-  display_string(2, "ACE 321");
-  display_string(3, "4: Back");
-  display_update();
-}
-
-void displayOptionsMenu ( void ) {
-  display_string(0, "Option 1: "); // placeholders for now
-  display_string(1, "Option 2: ");
-  display_string(2, "Option 3: ");
-  display_string(3, "4: Back");
-  display_update();
-}
-
-void displayCountdown ( void ) {
-  displayClr();
-
-  display_string(0, "    Game will");
-  display_string(1, "    start in:");
-  display_string(2, "        3");
-  display_string(3, "");
-  display_update();
-
-  quicksleep(6000000);
-
-  display_string(2, "        2");
-  display_update();
-
-  quicksleep(6000000);
-
-  display_string(2, "        1");
-  display_update();
-
-  quicksleep(6000000);
-
-  displayClr();
-}
-
-int menuState = 0;
-int splashMenu = 0;
-int hiScoreMenu = 2;
-int optionsMenu = 3;
-
-/* menuHandler:
-  Handles menu state and enters the game loop
-
-  Written by Casper Johansson
-*/
-void menuHandler ( void ) {
-  
-  /*
-    Splash menu cases
-  */
-  if (btn1pressed() && menuState == splashMenu) {
-    displayCountdown();
-    gameLoop();
-  }
-
-  if (btn2pressed() && menuState == splashMenu) {
-    menuState = hiScoreMenu;
-    displayHiScoreMenu();
-  }
-
-  /*
-    Highscore menu cases
-  */
-  if (btn4pressed() && menuState == hiScoreMenu) {
-    menuState = splashMenu;
-    displaySplashMenu();
-  }
-}
 
 /* 
   twoPower:

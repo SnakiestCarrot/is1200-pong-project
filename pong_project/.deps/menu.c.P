@@ -1,8 +1,8 @@
-mipsfunc.c.o: mipsfunc.c /opt/mcb32tools/include/stdint.h \
+menu.c.o: menu.c /opt/mcb32tools/include/stdint.h \
  /opt/mcb32tools/lib/gcc/mipsel-mcb32-elf/4.9.2/include/stdint-gcc.h \
  /opt/mcb32tools/include/pic32mx.h mipslab.h \
  /opt/mcb32tools/include/math.h /opt/mcb32tools/include/machine/ieeefp.h
-mipsfunc.c /opt/mcb32tools/include/stdint.h :
+menu.c /opt/mcb32tools/include/stdint.h :
  /opt/mcb32tools/lib/gcc/mipsel-mcb32-elf/4.9.2/include/stdint-gcc.h :
  /opt/mcb32tools/include/pic32mx.h mipslab.h :
  /opt/mcb32tools/include/math.h /opt/mcb32tools/include/machine/ieeefp.h :
