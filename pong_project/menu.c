@@ -4,22 +4,26 @@
 #include "mipslab.h"  /* Declatations for these labs */
 #include <math.h>
 
+// Used for difficulty selection menu
 char difficultyStr[2][16] = {
     "AI: Easy", "AI: Hard"
 };
 
+// Used for paddle speed selection menu
 char paddleStr[2][16] = {
     "Pddle Spd: 40.0", "Pddle Spd: 80.0"
 };
 
+// Used for player mode selection menu
 char playerModeStr[2][16] = {
     "2 Players", "1 Player VS AI"
 };
 
+// makes menu a bit simpler
 char *paddleSpdStr = "Pddle Spd: 40.0";
 
 int difficulty = 0;
-double paddleSpeed = 45.0;
+double paddleSpeed = 40.0;
 int playerMode = 0;
 
 

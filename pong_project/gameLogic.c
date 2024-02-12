@@ -56,8 +56,7 @@ int defaultPaddleHeight = 10;
 void gameLoop ( void ) {
   int timeoutcount = 0;
 
-  const double PI = 3.1459265358979323846;
-  const double MAXBOUNCEANGLE = (4 * PI) / 5;
+  const double MAXBOUNCEANGLE = (4 * 3.1415) / 5;
   double ballMaxSpeed = 40 / 60;
 
   struct Ball gameBall1;
@@ -142,11 +141,10 @@ void gameLoop ( void ) {
         
         gameBall1.speedX *= -1;
 
-
-        // TODO:
-        // for the angle calculation
-        // cant use cos and sin since math.h needs -lm to the compile arguments
-        // in order to be used, we need to ask teachers about how to include math.h in the makefile
+        /* TODO:
+        for the angle calculation
+        cant use cos and sin since math.h needs -lm to the compile arguments
+        in order to be used, we need to ask teachers about how to include math.h in the makefile */
 
         // double intersectY = (paddleR.posY + (paddleR.height/2)) - gameBall1.posY;
         // double intersectCoefficient = (intersectY / (paddleR.height / 2));
@@ -157,10 +155,10 @@ void gameLoop ( void ) {
       }
 
       // Right paddle movement
-      if (btn4pressed() && paddleR.posY > -1) {
+      if (btn2pressed() && paddleR.posY > -1) {
         paddleR.speedY = paddleSpeed / 60.0;
       } 
-      else if (btn3pressed() && (paddleR.posY + 4) < 32) {
+      else if (btn1pressed() && (paddleR.posY + 4) < 32) {
         paddleR.speedY = -paddleSpeed / 60.0;
       } 
       else {
@@ -168,10 +166,10 @@ void gameLoop ( void ) {
       }
 
       // Left paddle movement
-      if (btn2pressed() && paddleL.posY > -1) {
+      if (btn4pressed() && paddleL.posY > -1) {
         paddleL.speedY = paddleSpeed / 60.0;
       } 
-      else if (btn1pressed() && (paddleL.posY + 4) < 32) {
+      else if (btn3pressed() && (paddleL.posY + 4) < 32) {
         paddleL.speedY = -paddleSpeed / 60.0;
       } 
       else {

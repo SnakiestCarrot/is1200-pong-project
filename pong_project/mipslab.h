@@ -73,6 +73,13 @@ extern const uint8_t clearedBuffer[128*4];
 
 /* More functions from mipsfunc.c */
 void menuHandler ( void );
+
+/*
+   Tracks the current menu state
+   0 = Splash menu
+   1 = Highscores menu
+   2 = Options menu
+*/
 extern int menuState;
 
 /* displayPixel:

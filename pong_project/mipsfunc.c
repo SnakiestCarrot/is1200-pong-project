@@ -409,5 +409,5 @@ void displayCredits ( void ) {
   display_string(2, "Casper");
   display_string(3, "Johansson");
   display_update();
-  quicksleep(40000000);
+  quicksleep(30000000);
 }
