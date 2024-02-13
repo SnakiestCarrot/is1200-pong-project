@@ -58,8 +58,8 @@ double ballMaxSpeed;
 
 // Initializes variables changed inside the game loop
 void gameStateInit ( void ) {
-  int scoreLeft = 0;
-  int scoreRight = 0;
+  scoreLeft = 0;
+  scoreRight = 0;
   
   gameBall1.posX = 64.0;
   gameBall1.posY = 16.0;
