@@ -124,6 +124,7 @@ void menuHandler ( void ) {
         if (btn3pressed()) {
             menuState = optionsMenu;
             displayOptionsMenu();
+            quicksleep(1500000);    // Accidentally detects input when entering the menu otherwise
         }
 
         if (getsw() == 0x8) {

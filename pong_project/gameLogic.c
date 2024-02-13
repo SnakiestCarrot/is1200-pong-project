@@ -1,15 +1,4 @@
 
-/*  gameLogic.c:
- 
-  Originally created by Casper Johansson
-
-  As the name implies, handles game logic.
-
-
-
-
-*/
-
 
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
@@ -37,8 +26,6 @@ struct Ball {
 
 /*
   struct for the paddles
-
-  pos
 */
 struct Paddle {
   double posX;
@@ -56,14 +43,28 @@ struct Ball gameBall1;
 struct Paddle paddleR;
 struct Paddle paddleL;
 
-int scoreLeft = 0;
-int scoreRight = 0;
+// Tracks the score for the left side paddle (Player)
+int scoreLeft;
 
+// Tracks the score for the right side paddle (Player or AI)
+int scoreRight;
+
+// Determines the sensitivity of the ball bouncing of the paddles
+const double MAXBOUNCEANGLE = (1.2 * 3.1415) / 5;
+
+// Determines the maximum speed at which the ball will 
+// travel at as a combined speed for the x and y vectors.
+double ballMaxSpeed;
+
+// Initializes variables changed inside the game loop
 void gameStateInit ( void ) {
+  int scoreLeft = 0;
+  int scoreRight = 0;
+  
   gameBall1.posX = 64.0;
   gameBall1.posY = 16.0;
-  gameBall1.speedX = -60.0 / 60.0;
-  gameBall1.speedY = 45.0 / 60.0;
+  gameBall1.speedX = -40.0 / 60.0;
+  gameBall1.speedY = 15.0 / 60.0;
 
   paddleR.posX = 120;
   paddleR.posY = 16;
@@ -77,15 +78,16 @@ void gameStateInit ( void ) {
   paddleL.speedX = 0;
   paddleL.speedY = 0;
   paddleL.height = defaultPaddleHeight;
+
+  const double MAXBOUNCEANGLE = (1.2 * 3.1415) / 5;
+  double ballMaxSpeed = 85.0 / 60.0;
 }
 
 void gameLoop ( void ) {
   int timeoutcount = 0;
 
-  const double MAXBOUNCEANGLE = (1.2 * 3.1415) / 5;
-  double ballMaxSpeed = 60.0 / 60.0;
-
   gameStateInit();
+  ballMaxSpeed = 85.0 / 60.0;
   
   while (getsw() != 0x1) {
 
@@ -139,54 +141,61 @@ void gameLoop ( void ) {
       // FIXME:
       // below needs to be cleaned up
 
-      // FIXME: Also collisions have a weird bug where if the ball hits the top or bottom of the paddle
-      // it will go inside the paddle and then exit, very odd
-
       // Right paddle and ball collision detection
       int ballRPaddleXCollide = (paddleR.posX - 1.0 <= gameBall1.posX + 1.0 && paddleR.posX + 1.0 >= gameBall1.posX - 1.0);
-      int ballRPaddleYCollide = ((paddleR.posY - 2.0 <= gameBall1.posY + 2.0) && (paddleR.posY + paddleR.height + 2.0) >= gameBall1.posY - 2.0);
+      int ballRPaddleYCollide = ((paddleR.posY - 1.0 <= gameBall1.posY + 1.0) && (paddleR.posY + paddleR.height + 1.0) >= gameBall1.posY - 1.0);
       int ballRPaddleCollision = ballRPaddleXCollide && ballRPaddleYCollide;
 
-      // left paddle and ball collision detection
+      // Left paddle and ball collision detection
       int ballLPaddleXCollide = (paddleL.posX - 1.0 <= gameBall1.posX + 1.0 && paddleL.posX + 1.0 >= gameBall1.posX - 1.0);
-      int ballLPaddleYCollide = ((paddleL.posY - 2.0 <= gameBall1.posY + 2.0) && (paddleL.posY + paddleR.height + 2.0) >= gameBall1.posY - 2.0);
+      int ballLPaddleYCollide = ((paddleL.posY - 1.0 <= gameBall1.posY + 1.0) && (paddleL.posY + paddleR.height + 1.0) >= gameBall1.posY - 1.0);
       int ballLPaddleCollision = ballLPaddleXCollide && ballLPaddleYCollide;
 
       if (ballRPaddleCollision) {
-        
-        // gameBall1.speedX *= -1;
-
+        // Angle calculation
         double relativeY = (paddleR.posY + (paddleR.height/2)) - gameBall1.posY;
         double intersectCoefficient = relativeY / (paddleR.height + 20.0);
         double bounceAngle = intersectCoefficient * MAXBOUNCEANGLE;
 
+        // New speeds
         gameBall1.speedX = -ballMaxSpeed * cos(bounceAngle);
         gameBall1.speedY = ballMaxSpeed * -sin(bounceAngle);
       }
 
       if (ballLPaddleCollision) {
+        // Angle calculation
         double relativeY = (paddleL.posY + (paddleL.height/2)) - gameBall1.posY;
         double intersectCoefficient = relativeY / (paddleL.height / 2);
         double bounceAngle = intersectCoefficient * MAXBOUNCEANGLE;
 
+        // New speeds
         gameBall1.speedX = ballMaxSpeed * cos(bounceAngle);
         gameBall1.speedY = ballMaxSpeed * -sin(bounceAngle);
       }
 
+      // Change the AI difficulty by changing its movement speed
+      double paddleSpeedAI;
+      
+      if (difficulty == 0) {
+        paddleSpeedAI = 27.0;
+      } else if (difficulty == 1) {
+        paddleSpeedAI = 36.0;
+      }
+      
       // Right paddle movement for AI
       if (playerMode == 1) {
-
-        // Easy AI
         int yPosCheck = gameBall1.posY > paddleR.posY + (paddleR.height / 2);
         int boundsCheckUpper = paddleR.posY > -1;
         int boundsCheckLower = (paddleR.posY + 4) < 32;
+
+        // Will wait until the player hits the paddle
         int waitForHit = gameBall1.speedX > 0;
 
         if (yPosCheck && boundsCheckUpper && waitForHit) {
-          paddleR.speedY = paddleSpeed / 80.0;
+          paddleR.speedY = paddleSpeedAI / 60.0;
         } 
         else if (~yPosCheck && boundsCheckLower && waitForHit) {
-          paddleR.speedY = -paddleSpeed / 80.0;
+          paddleR.speedY = -paddleSpeedAI / 60.0;
         } 
         else {
           paddleR.speedY = 0;
@@ -239,27 +248,9 @@ void gameLoop ( void ) {
       display_image(0, displayBuffer);
       timeoutcount = 0;
     }
-    
-    
   }
 
   displaySplashMenu();
   menuState = 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
