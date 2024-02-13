@@ -428,8 +428,6 @@ void scoreToStr (int scoreLeft, int scoreRight) {
   scoreStr[10] = secondRight;
 }
 
-
-
 void displayGameScore ( void ) {
   scoreToStr(scoreLeft, scoreRight);
   
