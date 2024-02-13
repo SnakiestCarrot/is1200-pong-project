@@ -36,4 +36,3 @@ Bugs:
     and it doesnt display one pixel of the paddle
 
 
-

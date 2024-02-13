@@ -15,13 +15,7 @@
 #include "mipslab.h"  /* Declatations for these labs */
 #include <math.h>
 
-volatile int* trisE;
-volatile int* portE;
 
-int timeoutcount = 0;
-int mytime = 0x5957;
-
-char textstring[] = "text, more text, and even more text!";
 
 /* Interrupt Service Routine */
 void user_isr( void )                   // called from vectors.S which handles interrupts
@@ -33,8 +27,6 @@ void user_isr( void )                   // called from vectors.S which handles i
 void labinit( void )
 {
   // port E init
-  trisE = (volatile int*) 0xbf886100;
-  portE = (volatile int*) 0xbf886110;
   TRISE = ~(0xff);                   // set first 8 bits as output
   PORTE = PORTE & ~(0xff);
 
@@ -49,17 +41,6 @@ void labinit( void )
 
   displaySplashMenu();
 }
-
-/* This function is called repetitively from the main program */
-void labwork( void )
-{
-  menuHandler();
-  if (timeoutcount == 1) {
-    tick( &mytime );
-    timeoutcount = 0;
-  }
-}
-
 
 // registers v0 and v1 are used for returning function values so btn and sw will be put there
 

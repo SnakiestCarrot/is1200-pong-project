@@ -44,10 +44,10 @@ struct Paddle paddleR;
 struct Paddle paddleL;
 
 // Tracks the score for the left side paddle (Player)
-int scoreLeft;
+int scoreLeft = 0;
 
 // Tracks the score for the right side paddle (Player or AI)
-int scoreRight;
+int scoreRight = 0;
 
 // Determines the sensitivity of the ball bouncing of the paddles
 const double MAXBOUNCEANGLE = (1.2 * 3.1415) / 5;
@@ -58,9 +58,6 @@ double ballMaxSpeed;
 
 // Initializes variables changed inside the game loop
 void gameStateInit ( void ) {
-  scoreLeft = 0;
-  scoreRight = 0;
-  
   gameBall1.posX = 64.0;
   gameBall1.posY = 16.0;
   gameBall1.speedX = -40.0 / 60.0;
