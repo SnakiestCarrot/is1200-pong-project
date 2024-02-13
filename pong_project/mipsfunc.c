@@ -430,7 +430,6 @@ void scoreToStr (int scoreLeft, int scoreRight) {
 
 void displayGameScore ( void ) {
   scoreToStr(scoreLeft, scoreRight);
-  int a = 0;
   display_string(0, "");
   display_string(1, scoreStr);
   display_string(2, "");
@@ -438,4 +437,12 @@ void displayGameScore ( void ) {
   display_update();
   
   quicksleep(10000000);
+}
+
+double absolute( double x ) {
+  if (x < 0) {
+    return -x;
+  } else {
+    return x;
+  }
 }

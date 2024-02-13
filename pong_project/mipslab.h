@@ -136,3 +136,5 @@ void displayGameScore ( void );
 extern int scoreLeft;
 
 extern int scoreRight;
+
+double absolute (double);
