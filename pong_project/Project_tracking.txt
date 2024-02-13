@@ -33,3 +33,9 @@ Bugs:
     A bug when paddles are in a certain spot, the lower part of the paddle crossing over y = 16 and it doesnt display one pixel of the paddle
 
 
+
+first char = (char)((45 / 10) + 48)
+second char = (char)((45 % 10) + 48)
+
+
+

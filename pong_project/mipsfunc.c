@@ -411,3 +411,33 @@ void displayCredits ( void ) {
   display_update();
   quicksleep(30000000);
 }
+
+char scoreStr[] = "       -  ";
+
+void scoreToStr (int scoreLeft, int scoreRight) {
+  char firstLeft = (char)((scoreLeft / 10) + 48);
+  char secondLeft = (char)((scoreLeft % 10) + 48);
+
+  char firstRight = (char)((scoreRight / 10) + 48);
+  char secondRight = (char)((scoreRight % 10) + 48);
+
+  scoreStr[4] = firstLeft;
+  scoreStr[5] = secondLeft;
+
+  scoreStr[9] = firstRight;
+  scoreStr[10] = secondRight;
+}
+
+
+
+void displayGameScore ( void ) {
+  scoreToStr(scoreLeft, scoreRight);
+  
+  display_string(0, "");
+  display_string(1, scoreStr);
+  display_string(2, "");
+  display_string(3, "");
+  display_update();
+  
+  quicksleep(10000000);
+}

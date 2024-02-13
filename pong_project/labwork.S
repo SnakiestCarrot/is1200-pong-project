@@ -23,6 +23,7 @@
 # declaring as global in order to be called from rest of directory
 .globl delay
 .globl time2string
+.globl hexasc
 .globl enable_interrupt
 
   #----------------------HEXASC---------------#

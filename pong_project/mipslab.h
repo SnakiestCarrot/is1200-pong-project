@@ -130,3 +130,9 @@ extern double paddleSpeed;
    can be toggled in the options menu
 */
 extern int playerMode;
+
+void displayGameScore ( void );
+
+extern int scoreLeft;
+
+extern int scoreRight;

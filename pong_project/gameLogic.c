@@ -48,10 +48,36 @@ struct Paddle {
   int height;
 };
 
-
-
 // set the default paddle height here
 int defaultPaddleHeight = 10;
+
+// creating ball and paddles
+struct Ball gameBall1;
+struct Paddle paddleR;
+struct Paddle paddleL;
+
+int scoreLeft = 0;
+int scoreRight = 0;
+
+void gameStateInit ( void ) {
+  gameBall1.posX = 64.0;
+  gameBall1.posY = 16.0;
+  gameBall1.speedX = 40.0 / 60.0;
+  gameBall1.speedY = 30.0 / 60.0;
+
+  paddleR.posX = 120;
+  paddleR.posY = 16;
+  paddleR.speedX = 0;
+  paddleR.speedY = 0;
+  paddleR.height = defaultPaddleHeight;
+
+  
+  paddleL.posX = 8;
+  paddleL.posY = 16;
+  paddleL.speedX = 0;
+  paddleL.speedY = 0;
+  paddleL.height = defaultPaddleHeight;
+}
 
 void gameLoop ( void ) {
   int timeoutcount = 0;
@@ -59,25 +85,7 @@ void gameLoop ( void ) {
   const double MAXBOUNCEANGLE = (4 * 3.1415) / 5;
   double ballMaxSpeed = 40 / 60;
 
-  struct Ball gameBall1;
-  gameBall1.posX = 64.0;
-  gameBall1.posY = 16.0;
-  gameBall1.speedX = 40.0 / 60.0;
-  gameBall1.speedY = 30.0 / 60.0;
-
-  struct Paddle paddleR;
-  paddleR.posX = 120;
-  paddleR.posY = 16;
-  paddleR.speedX = 0;
-  paddleR.speedY = 0;
-  paddleR.height = defaultPaddleHeight;
-
-  struct Paddle paddleL;
-  paddleL.posX = 8;
-  paddleL.posY = 16;
-  paddleL.speedX = 0;
-  paddleL.speedY = 0;
-  paddleL.height = defaultPaddleHeight;
+  gameStateInit();
   
   while (getsw() != 0x1) {
 
@@ -96,8 +104,15 @@ void gameLoop ( void ) {
       // Ball and wall collision detection
 
       // collison with left and right borders
-      if (gameBall1.posX >= 127 || gameBall1.posX < 0) {
-        gameBall1.speedX *= -1;
+      if (gameBall1.posX >= 127) {
+        scoreLeft++;
+        displayGameScore();
+        gameStateInit();
+      } 
+      else if (gameBall1.posX < 0) {
+        scoreRight++;
+        displayGameScore();
+        gameStateInit();
       }
 
       // collision with upper and lower borders
