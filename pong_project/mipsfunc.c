@@ -430,7 +430,7 @@ void scoreToStr (int scoreLeft, int scoreRight) {
 
 void displayGameScore ( void ) {
   scoreToStr(scoreLeft, scoreRight);
-  
+  int a = 0;
   display_string(0, "");
   display_string(1, scoreStr);
   display_string(2, "");
