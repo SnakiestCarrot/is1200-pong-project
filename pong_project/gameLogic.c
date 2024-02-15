@@ -61,7 +61,7 @@ void gameStateInit ( void ) {
   gameBall1.posX = 64.0;
   gameBall1.posY = 16.0;
   gameBall1.speedX = -40.0 / 60.0;
-  gameBall1.speedY = 15.0 / 60.0;
+  gameBall1.speedY = 5.0 / 60.0;
 
   paddleR.posX = 120;
   paddleR.posY = 16;
@@ -75,18 +75,14 @@ void gameStateInit ( void ) {
   paddleL.speedX = 0;
   paddleL.speedY = 0;
   paddleL.height = defaultPaddleHeight;
-
-  const double MAXBOUNCEANGLE = (1.2 * 3.1415) / 5;
-  double ballMaxSpeed = 85.0 / 60.0;
 }
 
 void gameLoop ( void ) {
   int timeoutcount = 0;
 
   gameStateInit();
-  ballMaxSpeed = 85.0 / 60.0;
   
-  while (getsw() != 0x1) {
+  while (getsw() != 0x1 && (scoreLeft < 5 && scoreRight < 5)) {
 
     // usage of the timer from lab 3
     if (IFS(0) & 0x100) {
@@ -115,7 +111,15 @@ void gameLoop ( void ) {
       }
 
       // collision with upper and lower borders
-      if (gameBall1.posY >= 31 || gameBall1.posY < 0) {
+      // if statements are split and pos updated in order to fix a bug
+      // where the ball would sometimes go out of bounds
+      if (gameBall1.posY < 0) {
+        gameBall1.posY = 0.0;
+        gameBall1.speedY *= -1;
+      }
+
+      if (gameBall1.posY >= 31) {
+        gameBall1.posY = 31.0;
         gameBall1.speedY *= -1;
       }
 
@@ -139,13 +143,19 @@ void gameLoop ( void ) {
       // below needs to be cleaned up
 
       // Right paddle and ball collision detection
-      int ballRPaddleXCollide = (paddleR.posX - 1.0 <= gameBall1.posX + 1.0 && paddleR.posX + 1.0 >= gameBall1.posX - 1.0);
-      int ballRPaddleYCollide = ((paddleR.posY - 1.0 <= gameBall1.posY + 1.0) && (paddleR.posY + paddleR.height + 1.0) >= gameBall1.posY - 1.0);
+      int ballRPaddleXCollide = (paddleR.posX - 1.0 <= gameBall1.posX + 1.0 &&
+                                  paddleR.posX + 1.0 >= gameBall1.posX - 1.0);
+      int ballRPaddleYCollide = ((paddleR.posY - 1.0 <= gameBall1.posY + 1.0) &&
+                                  (paddleR.posY + paddleR.height + 1.0) >= gameBall1.posY - 1.0);
+
       int ballRPaddleCollision = ballRPaddleXCollide && ballRPaddleYCollide;
 
       // Left paddle and ball collision detection
-      int ballLPaddleXCollide = (paddleL.posX - 1.0 <= gameBall1.posX + 1.0 && paddleL.posX + 1.0 >= gameBall1.posX - 1.0);
-      int ballLPaddleYCollide = ((paddleL.posY - 1.0 <= gameBall1.posY + 1.0) && (paddleL.posY + paddleR.height + 1.0) >= gameBall1.posY - 1.0);
+      int ballLPaddleXCollide = (paddleL.posX - 1.0 <= gameBall1.posX + 1.0 &&
+                                  paddleL.posX + 1.0 >= gameBall1.posX - 1.0);
+      int ballLPaddleYCollide = ((paddleL.posY - 1.0 <= gameBall1.posY + 1.0) && 
+                                  (paddleL.posY + paddleR.height + 1.0) >= gameBall1.posY - 1.0);
+
       int ballLPaddleCollision = ballLPaddleXCollide && ballLPaddleYCollide;
 
       if (ballRPaddleCollision) {
@@ -174,9 +184,9 @@ void gameLoop ( void ) {
       double paddleSpeedAI;
       
       if (difficulty == 0) {
-        paddleSpeedAI = 27.0;
+        paddleSpeedAI = 30.0;
       } else if (difficulty == 1) {
-        paddleSpeedAI = 36.0;
+        paddleSpeedAI = 40.0;
       }
       
       // Right paddle movement for AI
@@ -246,7 +256,9 @@ void gameLoop ( void ) {
       timeoutcount = 0;
     }
   }
-
+  displayWinnerScreen();
+  scoreLeft = 0;
+  scoreRight = 0;
   displaySplashMenu();
   menuState = 0;
 }

@@ -123,6 +123,8 @@ extern int difficulty;
 */
 extern double paddleSpeed;
 
+extern double ballMaxSpeed;
+
 /* 
    0 = 2-player mode 
    1 = 1-player VS AI mode
@@ -133,8 +135,12 @@ extern int playerMode;
 
 void displayGameScore ( void );
 
+void displayWinnerScreen ( void );
+
+void displayCountdown ( void );
+
 extern int scoreLeft;
 
 extern int scoreRight;
 
-double absolute (double);
+char *scoreToStr ( int, int );

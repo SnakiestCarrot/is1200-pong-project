@@ -9,9 +9,9 @@ char difficultyStr[2][16] = {
     "AI: Easy", "AI: Hard"
 };
 
-// Used for paddle speed selection menu
-char paddleStr[2][16] = {
-    "Pddle Spd: 40.0", "Pddle Spd: 80.0"
+// Used for ball speed selection menu
+char ballMaxSpeedStr[2][16] = {
+    "Ball Spd: 85.0", "Ball Spd: 130.0"
 };
 
 // Used for player mode selection menu
@@ -20,11 +20,12 @@ char playerModeStr[2][16] = {
 };
 
 // makes menu a bit simpler
-char *paddleSpdStr = "Pddle Spd: 40.0";
+char *ballStr = "Ball spd: 85.0";
 
 int difficulty = 0;
 double paddleSpeed = 40.0;
 int playerMode = 0;
+double ballMaxSpeed = 85.0 / 60.0;
 
 
 /*displaySplashMenu:
@@ -51,34 +52,10 @@ void displayHiScoreMenu ( void ) {
 
 void displayOptionsMenu ( void ) {
   display_string(0, difficultyStr[difficulty]);
-  display_string(1, paddleSpdStr);
+  display_string(1, ballStr);
   display_string(2, playerModeStr[playerMode]);
   display_string(3, "4: Back");
   display_update();
-}
-
-void displayCountdown ( void ) {
-  displayClr();
-
-  display_string(0, "    Game will");
-  display_string(1, "    start in:");
-  display_string(2, "        3");
-  display_string(3, "");
-  display_update();
-
-  quicksleep(6000000);
-
-  display_string(2, "        2");
-  display_update();
-
-  quicksleep(6000000);
-
-  display_string(2, "        1");
-  display_update();
-
-  quicksleep(6000000);
-
-  displayClr();
 }
 
 int splashMenu = 0;
@@ -142,7 +119,6 @@ void menuHandler ( void ) {
 
 
 
-
     /*
         Options menu cases
     */
@@ -160,10 +136,10 @@ void menuHandler ( void ) {
 
         // changes paddle speed
         if (btn2pressed()) {
-            paddleSpeed = (paddleSpeed == 40.0 ? 80.0 : 40.0); // toggles players paddle speed
-            paddleSpdStr = (paddleSpeed == 40.0 ? paddleStr[0] : paddleStr[1]);
+            ballMaxSpeed = (ballMaxSpeed == (85.0 / 60.0) ? (130.0 / 60.0) : (85.0 / 60.0)); // toggles players paddle speed
+            ballStr = (ballMaxSpeed == (85.0 / 60.0) ? ballMaxSpeedStr[0] : ballMaxSpeedStr[1]);
 
-            display_string(1, paddleSpdStr);
+            display_string(1, ballStr);
             display_update();
 
             quicksleep(1000000); //FIXME: same as in difficulty

@@ -220,7 +220,8 @@ void displayCredits ( void ) {
 
 char scoreStr[] = "       -  ";
 
-void scoreToStr (int scoreLeft, int scoreRight) {
+char *scoreToStr (int scoreLeft, int scoreRight) {
+  
   char firstLeft = (char)((scoreLeft / 10) + 48);
   char secondLeft = (char)((scoreLeft % 10) + 48);
 
@@ -232,15 +233,70 @@ void scoreToStr (int scoreLeft, int scoreRight) {
 
   scoreStr[9] = firstRight;
   scoreStr[10] = secondRight;
+
+  return scoreStr;
 }
 
 void displayGameScore ( void ) {
   scoreToStr(scoreLeft, scoreRight);
-  display_string(0, "");
-  display_string(1, scoreStr);
+  display_string(0, "    L    R");
+  display_string(1, scoreToStr(scoreLeft, scoreRight));
   display_string(2, "");
   display_string(3, "");
   display_update();
   
   quicksleep(10000000);
+}
+
+void displayWinnerScreen ( void ) {
+    if (scoreLeft > scoreRight) {
+        display_string(0, "   Left wins!");
+        display_string(1, scoreToStr(scoreLeft, scoreRight));
+        display_string(2, "");
+        display_string(3, "");
+        display_update();
+        quicksleep(10000000);
+    }
+
+    else if (scoreLeft < scoreRight) {
+        display_string(0, "  Right wins!");
+        display_string(1, scoreToStr(scoreLeft, scoreRight));
+        display_string(2, "");
+        display_string(3, "");
+        display_update();
+        quicksleep(10000000);
+    }
+
+    else {
+        display_string(0, " It's a draw!");
+        display_string(1, scoreToStr(scoreLeft, scoreRight));
+        display_string(2, "");
+        display_string(3, "");
+        display_update();
+        quicksleep(10000000);
+    }
+}
+
+void displayCountdown ( void ) {
+  displayClr();
+
+  display_string(0, "    Game will");
+  display_string(1, "    start in:");
+  display_string(2, "        3");
+  display_string(3, "");
+  display_update();
+
+  quicksleep(6000000);
+
+  display_string(2, "        2");
+  display_update();
+
+  quicksleep(6000000);
+
+  display_string(2, "        1");
+  display_update();
+
+  quicksleep(6000000);
+
+  displayClr();
 }
