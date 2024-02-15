@@ -143,6 +143,14 @@ extern int scoreLeft;
 
 extern int scoreRight;
 
+extern char highscorename1[];
+extern char highscorename2[];
+extern char highscorename3[];
+
+extern int highScore1;
+extern int highScore2;
+extern int highScore3;
+
 char *scoreToStr ( int, int );
 
 void highScoreHandler (int, int);
