@@ -257,9 +257,15 @@ void gameLoop ( void ) {
     }
   }
   displayWinnerScreen();
+  
+  highScoreHandler(scoreLeft, scoreRight);
+
+  
+  
   scoreLeft = 0;
   scoreRight = 0;
   displaySplashMenu();
   menuState = 0;
+  quicksleep(5000000);
 }
 

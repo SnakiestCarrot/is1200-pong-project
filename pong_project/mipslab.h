@@ -144,3 +144,5 @@ extern int scoreLeft;
 extern int scoreRight;
 
 char *scoreToStr ( int, int );
+
+void highScoreHandler (int, int);

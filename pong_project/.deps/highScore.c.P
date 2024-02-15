@@ -1,0 +1,2 @@
+highScore.c.o: highScore.c
+highScore.c :

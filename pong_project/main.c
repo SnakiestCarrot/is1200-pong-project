@@ -61,7 +61,7 @@ int main(void) {
 
 	while( 1 )
 	{
-	  menuHandler();
+	  	menuHandler();
 	}
 	return 0;
 }
