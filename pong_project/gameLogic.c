@@ -50,7 +50,7 @@ int scoreLeft = 0;
 int scoreRight = 0;
 
 // Determines the sensitivity of the ball bouncing of the paddles
-const double MAXBOUNCEANGLE = (1.2 * 3.1415) / 5;
+const double bounciness = (1.2 * 3.1415) / 5;
 
 // Determines the maximum speed at which the ball will 
 // travel at as a combined speed for the x and y vectors.
@@ -151,8 +151,8 @@ void gameLoop ( void ) {
       if (ballRPaddleCollision) {
         // Angle calculation
         double relativeY = (paddleR.posY + (paddleR.height/2)) - gameBall1.posY;
-        double intersectCoefficient = relativeY / (paddleR.height + 20.0);
-        double bounceAngle = intersectCoefficient * MAXBOUNCEANGLE;
+        double intersectCoefficient = relativeY / (paddleR.height / 2);
+        double bounceAngle = intersectCoefficient * bounciness;
 
         // New speeds
         gameBall1.speedX = -ballMaxSpeed * cos(bounceAngle);
@@ -163,7 +163,7 @@ void gameLoop ( void ) {
         // Angle calculation
         double relativeY = (paddleL.posY + (paddleL.height/2)) - gameBall1.posY;
         double intersectCoefficient = relativeY / (paddleL.height / 2);
-        double bounceAngle = intersectCoefficient * MAXBOUNCEANGLE;
+        double bounceAngle = intersectCoefficient * bounciness;
 
         // New speeds
         gameBall1.speedX = ballMaxSpeed * cos(bounceAngle);
