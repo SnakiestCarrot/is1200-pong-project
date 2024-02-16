@@ -60,6 +60,8 @@ void highScoreHandler (int leftScore, int RightScore) {
     char firstLeft = (char)((scoreDelta / 10) + 48);
     char secondLeft = (char)((scoreDelta % 10) + 48);
 
+    // FIXME: Below code is ugly, string literals are hard to manage in c
+    // there is a better solution, I just havent found it
     if (highScore1 < scoreDelta) {
 
         highscorename3[0] = highscorename2[0];

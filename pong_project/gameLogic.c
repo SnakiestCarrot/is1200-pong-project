@@ -49,12 +49,18 @@ int scoreLeft = 0;
 // Tracks the score for the right side paddle (Player or AI)
 int scoreRight = 0;
 
+// Decides at what score to end the game
+int scoreLimit = 10;
+
 // Determines the sensitivity of the ball bouncing of the paddles
 const double bounciness = (1.2 * 3.1415) / 5;
 
 // Determines the maximum speed at which the ball will 
 // travel at as a combined speed for the x and y vectors.
 double ballMaxSpeed;
+
+// Hitbox safety margin
+double hitboxSize = 1.0;
 
 // Initializes variables changed inside the game loop
 void gameStateInit ( void ) {
@@ -82,7 +88,7 @@ void gameLoop ( void ) {
 
   gameStateInit();
   
-  while (getsw() != 0x1 && (scoreLeft < 5 && scoreRight < 5)) {
+  while (getsw() != 0x1 && (scoreLeft < scoreLimit && scoreRight < scoreLimit)) {
 
     // usage of the timer from lab 3
     if (IFS(0) & 0x100) {
@@ -90,15 +96,13 @@ void gameLoop ( void ) {
       IFSCLR(0) = 0x100;
     }
 
+    // When timer gives an interrupt, do a game update
     if (timeoutcount == 1) {
       
       // Clear displayBuffer from previous screen
       displayClr();
 
-
       // Ball and wall collision detection
-
-      // collison with left and right borders
       if (gameBall1.posX >= 127) {
         scoreLeft++;
         displayGameScore();
@@ -139,22 +143,19 @@ void gameLoop ( void ) {
         paddleL.posY = 32 - (paddleL.height + 1);
       }
 
-      // FIXME:
-      // below needs to be cleaned up
-
       // Right paddle and ball collision detection
-      int ballRPaddleXCollide = (paddleR.posX - 1.0 <= gameBall1.posX + 1.0 &&
-                                  paddleR.posX + 1.0 >= gameBall1.posX - 1.0);
-      int ballRPaddleYCollide = ((paddleR.posY - 1.0 <= gameBall1.posY + 1.0) &&
-                                  (paddleR.posY + paddleR.height + 1.0) >= gameBall1.posY - 1.0);
+      int ballRPaddleXCollide = (paddleR.posX - hitboxSize <= gameBall1.posX + hitboxSize &&
+                                  paddleR.posX + hitboxSize >= gameBall1.posX - hitboxSize);
+      int ballRPaddleYCollide = ((paddleR.posY - hitboxSize <= gameBall1.posY + hitboxSize) &&
+                                  (paddleR.posY + paddleR.height + hitboxSize) >= gameBall1.posY - hitboxSize);
 
       int ballRPaddleCollision = ballRPaddleXCollide && ballRPaddleYCollide;
 
       // Left paddle and ball collision detection
-      int ballLPaddleXCollide = (paddleL.posX - 1.0 <= gameBall1.posX + 1.0 &&
-                                  paddleL.posX + 1.0 >= gameBall1.posX - 1.0);
-      int ballLPaddleYCollide = ((paddleL.posY - 1.0 <= gameBall1.posY + 1.0) && 
-                                  (paddleL.posY + paddleR.height + 1.0) >= gameBall1.posY - 1.0);
+      int ballLPaddleXCollide = (paddleL.posX - hitboxSize <= gameBall1.posX + hitboxSize &&
+                                  paddleL.posX + hitboxSize >= gameBall1.posX - hitboxSize);
+      int ballLPaddleYCollide = ((paddleL.posY - hitboxSize <= gameBall1.posY + hitboxSize) && 
+                                  (paddleL.posY + paddleR.height + hitboxSize) >= gameBall1.posY - hitboxSize);
 
       int ballLPaddleCollision = ballLPaddleXCollide && ballLPaddleYCollide;
 
@@ -245,8 +246,8 @@ void gameLoop ( void ) {
       paddleL.posY += paddleL.speedY;
 
       // Paddle pixels being written to displayBuffer
-      displayPaddle(paddleR.posX, paddleR.posY);
-      displayPaddle(paddleL.posX, paddleL.posY);
+      displayPaddle(paddleR.posX, paddleR.posY);  // Right paddle
+      displayPaddle(paddleL.posX, paddleL.posY);  // Left paddle
 
       // Ball pixels being written to displayBuffer
       displayBall(gameBall1.posX, gameBall1.posY);
@@ -256,14 +257,17 @@ void gameLoop ( void ) {
       timeoutcount = 0;
     }
   }
+  
   displayWinnerScreen();
+  if (playerMode == 1) {
+    highScoreHandler(scoreLeft, scoreRight);
+  }
   
-  highScoreHandler(scoreLeft, scoreRight);
-
-  
-  
+  // Reset scores
   scoreLeft = 0;
   scoreRight = 0;
+
+  // Set menustate to splashmenu
   displaySplashMenu();
   menuState = 0;
   quicksleep(5000000);
