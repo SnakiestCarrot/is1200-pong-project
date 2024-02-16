@@ -55,16 +55,16 @@ void highScoreInput ( char inputName[] ) {
 }
 
 //alternative, reusable code to copy highscore lists as done below
-void copyHighscore (char* highscorename1, char* highscorename2){
-    for (int i = 0; i <= 2; i++){
-        highscorename1[i]  = highscorename2[i];
+// void copyHighscore (char* highscorename1, char* highscorename2){
+//     for (int i = 0; i <= 2; i++){
+//         highscorename1[i]  = highscorename2[i];
         
-    }
-    for (int i = 4; i <= 5; i++){
-        highscorename1[i]  = highscorename2[i];
-    }
+//     }
+//     for (int i = 4; i <= 5; i++){
+//         highscorename1[i]  = highscorename2[i];
+//     }
     
-} 
+// } 
 
 void highScoreHandler (int leftScore, int RightScore) {
     int scoreDelta = (scoreLeft - scoreRight);

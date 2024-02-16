@@ -83,6 +83,21 @@ void gameStateInit ( void ) {
   paddleL.height = defaultPaddleHeight;
 }
 
+//function for calculating bounce angle:
+      /* double calculateBounceAngle (struct Paddle paddle) {
+        double relativeY = (paddle.posY + (paddle.height/2)) - gameBall1.posY;
+        double intersectCoefficient = relativeY / (paddle.height / 2);
+        return = intersectCoefficient * bounciness;
+      } */
+
+      //functions for testing ball collision
+      // int ballPaddleCollide (struct Paddle paddle) {
+
+      // int ballPaddleXCollide = (paddle.posX - hitboxSize <= gameBall1.posX + hitboxSize &&
+      //                             paddle.posX + hitboxSize >= gameBall1.posX - hitboxSize);
+      // int ballPaddleYCollide = ((paddle.posY - hitboxSize <= gameBall1.posY + hitboxSize) &&
+      //                             (paddle.posY + paddle.height + hitboxSize) >= gameBall1.posY - hitboxSize);
+
 void gameLoop ( void ) {
   int timeoutcount = 0;
 
@@ -143,15 +158,23 @@ void gameLoop ( void ) {
         paddleL.posY = 32 - (paddleL.height + 1);
       }
 
-      //functions for testing ball collision
-      int ballPaddleCollide(struct paddle){
-        int ballPaddleXCollide = (paddle.posX - hitboxSize <= gameBall1.posX + hitboxSize &&
-                                  paddle.posX + hitboxSize >= gameBall1.posX - hitboxSize);
-        int ballPaddleYCollide = ((paddle.posY - hitboxSize <= gameBall1.posY + hitboxSize) &&
-                                  (paddle.posY + paddle.height + hitboxSize) >= gameBall1.posY - hitboxSize);
-       return ballPaddleXCollide && ballPaddleYCollide;
-      }
+      // Uses the Y speed of the ball to modify the final angle of reflection of the ball
+      // We can use only the Y speed since we have the constant speed of the balls total vector (ballMaxSpeed)
+      // from a gameplay perspective it is not very good, but it is a requirement for an advanced project
 
+      // The shallower the angle the less effect it will have
+      
+      int ballTrajectoryAffectsGameplay = 1; // turn on or off if the ball trajectory affects gameplay
+      double trajectoryModifier;
+      
+      // Needed for advanced project requirements
+      if (ballTrajectoryAffectsGameplay == 1) { 
+        trajectoryModifier = 1.0 - (gameBall1.speedY / ballMaxSpeed);  
+      } else {
+        trajectoryModifier = 1.0;
+      }
+      
+      
       // Right paddle and ball collision detection - Remove this block
       int ballRPaddleXCollide = (paddleR.posX - hitboxSize <= gameBall1.posX + hitboxSize &&
                                   paddleR.posX + hitboxSize >= gameBall1.posX - hitboxSize);
@@ -168,32 +191,10 @@ void gameLoop ( void ) {
 
       int ballLPaddleCollision = ballLPaddleXCollide && ballLPaddleYCollide;
 
-      //function for calculating bounce angel:
-      double calculateBounceAngle(struct paddle){
-        double relativeY = (paddle.posY + (paddle.height/2)) - gameBall1.posY;
-        double intersectCoefficient = relativeY / (paddle.height / 2);
-        return = intersectCoefficient * bounciness;
-      }
-
-      //can replace next two statements with:
-      //if (ballRPaddleCollision) {
-      //gameBall1.SpeedX = -ballMaxSpeed * cos(calculateBounceAngle(paddleR));
-      //gameBall1.speedY = ballMaxSpeed * -sin(calculateBounceAngle(paddleR));
-      //}
-      //if (ballLPaddleCollision) {
-      //gameBall1.SpeedX = -ballMaxSpeed * cos(calculateBounceAngle(paddleL));
-      //gameBall1.speedY = ballMaxSpeed * -sin(calculateBounceAngle(paddleL));
-      //}
-
-        // New speeds
-        gameBall1.speedX = -ballMaxSpeed * cos(bounceAngle);
-        gameBall1.speedY = ballMaxSpeed * -sin(bounceAngle);
-      }
-
       if (ballRPaddleCollision) {
         // Angle calculation 
         double relativeY = (paddleR.posY + (paddleR.height/2)) - gameBall1.posY;
-        double intersectCoefficient = relativeY / (paddleR.height / 2);
+        double intersectCoefficient = (relativeY / (paddleR.height / 2)) * trajectoryModifier;
         double bounceAngle = intersectCoefficient * bounciness;
 
         // New speeds
@@ -204,7 +205,7 @@ void gameLoop ( void ) {
       if (ballLPaddleCollision) {
         // Angle calculation
         double relativeY = (paddleL.posY + (paddleL.height/2)) - gameBall1.posY;
-        double intersectCoefficient = relativeY / (paddleL.height / 2);
+        double intersectCoefficient = (relativeY / (paddleL.height / 2)) * trajectoryModifier;
         double bounceAngle = intersectCoefficient * bounciness;
 
         // New speeds
@@ -265,10 +266,10 @@ void gameLoop ( void ) {
       }
 
       //function for updating all positions:
-      void updatePosition(struct object) {
-        object.posX += object.speedx;
-        object.posY += object.speedY;
-      }
+      // void updatePosition(struct object) {
+      //   object.posX += object.speedx;
+      //   object.posY += object.speedY;
+      // }
 
       //Update next statements to:
       //updatePosition(gameBall1);
