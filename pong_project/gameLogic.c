@@ -39,7 +39,7 @@ struct Paddle {
 int defaultPaddleHeight = 8;
 
 // creating ball and paddles
-struct Ball gameBall1;
+struct Ball gameBall;
 struct Paddle paddleR;
 struct Paddle paddleL;
 
@@ -53,6 +53,7 @@ int scoreRight = 0;
 int scoreLimit = 10;
 
 // Determines the sensitivity of the ball bouncing of the paddles
+// it is essentially the maximum angle the ball can bounce at from horizontal
 const double bounciness = (1.2 * 3.1415) / 5;
 
 // Determines the maximum speed at which the ball will 
@@ -64,17 +65,16 @@ double hitboxSize = 1.0;
 
 // Initializes variables changed inside the game loop
 void gameStateInit ( void ) {
-  gameBall1.posX = 64.0;
-  gameBall1.posY = 16.0;
-  gameBall1.speedX = -40.0 / 60.0;
-  gameBall1.speedY = 5.0 / 60.0;
+  gameBall.posX = 64.0;
+  gameBall.posY = 16.0;
+  gameBall.speedX = -40.0 / 60.0;
+  gameBall.speedY = 5.0 / 60.0;
 
   paddleR.posX = 120;
   paddleR.posY = 16;
   paddleR.speedX = 0;
   paddleR.speedY = 0;
   paddleR.height = defaultPaddleHeight;
-
   
   paddleL.posX = 8;
   paddleL.posY = 16;
@@ -118,12 +118,12 @@ void gameLoop ( void ) {
       displayClr();
 
       // Ball and wall collision detection
-      if (gameBall1.posX >= 127) {
+      if (gameBall.posX >= 127) {
         scoreLeft++;
         displayGameScore();
         gameStateInit();
       } 
-      else if (gameBall1.posX < 0) {
+      else if (gameBall.posX < 0) {
         scoreRight++;
         displayGameScore();
         gameStateInit();
@@ -132,14 +132,14 @@ void gameLoop ( void ) {
       // collision with upper and lower borders
       // if statements are split and pos updated in order to fix a bug
       // where the ball would sometimes go out of bounds
-      if (gameBall1.posY < 0) {
-        gameBall1.posY = 0.0;
-        gameBall1.speedY *= -1;
+      if (gameBall.posY < 0) {
+        gameBall.posY = 0.0;
+        gameBall.speedY *= -1;
       }
 
-      if (gameBall1.posY >= 31) {
-        gameBall1.posY = 31.0;
-        gameBall1.speedY *= -1;
+      if (gameBall.posY >= 31) {
+        gameBall.posY = 31.0;
+        gameBall.speedY *= -1;
       }
 
       // Right paddle and wall collison detection
@@ -169,48 +169,48 @@ void gameLoop ( void ) {
       
       // Needed for advanced project requirements
       if (ballTrajectoryAffectsGameplay == 1) { 
-        trajectoryModifier = 1.0 - (gameBall1.speedY / ballMaxSpeed);  
+        trajectoryModifier = 1.0 - (gameBall.speedY / ballMaxSpeed);  
       } else {
         trajectoryModifier = 1.0;
       }
       
       
       // Right paddle and ball collision detection - Remove this block
-      int ballRPaddleXCollide = (paddleR.posX - hitboxSize <= gameBall1.posX + hitboxSize &&
-                                  paddleR.posX + hitboxSize >= gameBall1.posX - hitboxSize);
-      int ballRPaddleYCollide = ((paddleR.posY - hitboxSize <= gameBall1.posY + hitboxSize) &&
-                                  (paddleR.posY + paddleR.height + hitboxSize) >= gameBall1.posY - hitboxSize);
+      int ballRPaddleXCollide = (paddleR.posX - hitboxSize <= gameBall.posX + hitboxSize &&
+                                  paddleR.posX + hitboxSize >= gameBall.posX - hitboxSize);
+      int ballRPaddleYCollide = ((paddleR.posY - hitboxSize <= gameBall.posY + hitboxSize) &&
+                                  (paddleR.posY + paddleR.height + hitboxSize) >= gameBall.posY - hitboxSize);
 
       int ballRPaddleCollision = ballRPaddleXCollide && ballRPaddleYCollide; //would become - intballRPaddleCollision = ballPaddleCollide(paddleR);
 
       // Left paddle and ball collision detection - do the same with left
-      int ballLPaddleXCollide = (paddleL.posX - hitboxSize <= gameBall1.posX + hitboxSize &&
-                                  paddleL.posX + hitboxSize >= gameBall1.posX - hitboxSize);
-      int ballLPaddleYCollide = ((paddleL.posY - hitboxSize <= gameBall1.posY + hitboxSize) && 
-                                  (paddleL.posY + paddleR.height + hitboxSize) >= gameBall1.posY - hitboxSize);
+      int ballLPaddleXCollide = (paddleL.posX - hitboxSize <= gameBall.posX + hitboxSize &&
+                                  paddleL.posX + hitboxSize >= gameBall.posX - hitboxSize);
+      int ballLPaddleYCollide = ((paddleL.posY - hitboxSize <= gameBall.posY + hitboxSize) && 
+                                  (paddleL.posY + paddleR.height + hitboxSize) >= gameBall.posY - hitboxSize);
 
       int ballLPaddleCollision = ballLPaddleXCollide && ballLPaddleYCollide;
 
       if (ballRPaddleCollision) {
         // Angle calculation 
-        double relativeY = (paddleR.posY + (paddleR.height/2)) - gameBall1.posY;
+        double relativeY = (paddleR.posY + (paddleR.height/2)) - gameBall.posY;
         double intersectCoefficient = (relativeY / (paddleR.height / 2)) * trajectoryModifier;
         double bounceAngle = intersectCoefficient * bounciness;
 
         // New speeds
-        gameBall1.speedX = -ballMaxSpeed * cos(bounceAngle);
-        gameBall1.speedY = ballMaxSpeed * -sin(bounceAngle);
+        gameBall.speedX = -ballMaxSpeed * cos(bounceAngle);
+        gameBall.speedY = ballMaxSpeed * -sin(bounceAngle);
       }
 
       if (ballLPaddleCollision) {
         // Angle calculation
-        double relativeY = (paddleL.posY + (paddleL.height/2)) - gameBall1.posY;
+        double relativeY = (paddleL.posY + (paddleL.height/2)) - gameBall.posY;
         double intersectCoefficient = (relativeY / (paddleL.height / 2)) * trajectoryModifier;
         double bounceAngle = intersectCoefficient * bounciness;
 
         // New speeds
-        gameBall1.speedX = ballMaxSpeed * cos(bounceAngle);
-        gameBall1.speedY = ballMaxSpeed * -sin(bounceAngle);
+        gameBall.speedX = ballMaxSpeed * cos(bounceAngle);
+        gameBall.speedY = ballMaxSpeed * -sin(bounceAngle);
       }
 
       // Change the AI difficulty by changing its movement speed
@@ -219,17 +219,17 @@ void gameLoop ( void ) {
       if (difficulty == 0) {
         paddleSpeedAI = 30.0;
       } else if (difficulty == 1) {
-        paddleSpeedAI = 40.0;
+        paddleSpeedAI = 45.0;
       }
       
       // Right paddle movement for AI
       if (playerMode == 1) {
-        int yPosCheck = gameBall1.posY > paddleR.posY + (paddleR.height / 2);
+        int yPosCheck = gameBall.posY > paddleR.posY + (paddleR.height / 2);
         int boundsCheckUpper = paddleR.posY > -1;
         int boundsCheckLower = (paddleR.posY + 4) < 32;
 
         // Will wait until the player hits the paddle
-        int waitForHit = gameBall1.speedX > 0;
+        int waitForHit = gameBall.speedX > 0;
 
         if (yPosCheck && boundsCheckUpper && waitForHit) {
           paddleR.speedY = paddleSpeedAI / 60.0;
@@ -277,8 +277,8 @@ void gameLoop ( void ) {
       //updatePosition(paddleL);
    
       // Ball position update
-      gameBall1.posX += gameBall1.speedX;
-      gameBall1.posY += gameBall1.speedY;
+      gameBall.posX += gameBall.speedX;
+      gameBall.posY += gameBall.speedY;
 
       // Right paddle position update
       paddleR.posX += paddleR.speedX;
@@ -293,7 +293,7 @@ void gameLoop ( void ) {
       displayPaddle(paddleL.posX, paddleL.posY);  // Left paddle
 
       // Ball pixels being written to displayBuffer
-      displayBall(gameBall1.posX, gameBall1.posY);
+      displayBall(gameBall.posX, gameBall.posY);
 
       // Sending the display buffer to OLED screen
       display_image(0, displayBuffer);
