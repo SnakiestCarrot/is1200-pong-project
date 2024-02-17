@@ -28,7 +28,6 @@ const int pageHeight = 8;
 // Change this to make ball larger, measured in pixels
 int ballSize = 2;
 
-
 uint8_t spi_send_recv(uint8_t data) {
 	while(!(SPI2STAT & 0x08));
 	SPI2BUF = data;
@@ -170,7 +169,7 @@ void displayPixel (int xPos, int yPos) {
 }
 
 /*
-  Writes a ball ((ballSize)x(ballSize) pixels) with its upper left corner
+  Writes a rectangle ((ballSize)x(ballSize) pixels) with its upper left corner
   on the specified x and y coordinates into the display buffer
 
   Made by Casper Johansson
