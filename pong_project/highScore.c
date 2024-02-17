@@ -25,12 +25,26 @@ int highScore2 = 0;
 int highScore3 = 0;
 
 /*
+    Copies a string on the format of the highscore strings
+
+    Made by August Wikdahl
+*/
+void copyHighscoreString (char destination[], char source[]) {
+    int i;
+    for (i = 0; i <= 5; i++) {
+        destination[i] = source[i];
+    }
+} 
+
+/*
     Takes a string as input and modifies the fields (chars) corresponding
     to the highscore name and highscore itself.
 
     Input assumed to be a char[7] with a terminating null character
 
     Modifies the input string directly.
+
+    Made by Casper Johansson
 */
 void highScoreInput ( char inputName[] ) {
 
@@ -76,18 +90,6 @@ void highScoreInput ( char inputName[] ) {
     quicksleep(10000000);
 }
 
-//alternative, reusable code to copy highscore lists as done below
-// void copyHighscore (char* highscorename1, char* highscorename2){
-//     for (int i = 0; i <= 2; i++){
-//         highscorename1[i]  = highscorename2[i];
-        
-//     }
-//     for (int i = 4; i <= 5; i++){
-//         highscorename1[i]  = highscorename2[i];
-//     }
-    
-// } 
-
 
 /*
     Handles the highscore after a finished game.
@@ -103,18 +105,8 @@ void highScoreHandler (int leftScore, int RightScore) {
     // FIXME: Below code is ugly, string literals are hard to manage in c
     // there is a better solution, I just havent found it
     if (highScore1 < scoreDelta) {
-
-        highscorename3[0] = highscorename2[0];
-        highscorename3[1] = highscorename2[1];
-        highscorename3[2] = highscorename2[2];
-        highscorename3[4] = highscorename2[4];
-        highscorename3[5] = highscorename2[5];
-
-        highscorename2[0] = highscorename1[0];
-        highscorename2[1] = highscorename1[1];
-        highscorename2[2] = highscorename1[2];
-        highscorename2[4] = highscorename1[4];
-        highscorename2[5] = highscorename1[5];
+        copyHighscoreString(highscorename3, highscorename2);
+        copyHighscoreString(highscorename2, highscorename1);
         
         highScoreInput(highscorename1);
 
@@ -126,11 +118,7 @@ void highScoreHandler (int leftScore, int RightScore) {
         highScore1 = scoreDelta;
     }
     else if (highScore2 < scoreDelta) {
-        highscorename3[0] = highscorename2[0];
-        highscorename3[1] = highscorename2[1];
-        highscorename3[2] = highscorename2[2];
-        highscorename3[4] = highscorename2[4];
-        highscorename3[5] = highscorename2[5];
+        copyHighscoreString(highscorename3, highscorename2);
         
         highScoreInput(highscorename2);
 
