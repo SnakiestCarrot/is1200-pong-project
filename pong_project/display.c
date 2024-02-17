@@ -139,9 +139,8 @@ void display_update(void) {
 
 void displayPixel (int xPos, int yPos) {
   
-  /*
-    Check for if index is outside screen
-  */
+  
+  // Check if index is outside screen
   if (yPos < 0 || yPos >= 32 || xPos < 0 || xPos >= 128) {
     return;
   }

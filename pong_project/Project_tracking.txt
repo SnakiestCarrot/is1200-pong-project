@@ -5,25 +5,26 @@ Implemented:
         1-player mode with 2 AI Difficulties
         Paddle and ball collisions
         Player can select the speed of the paddle in the options menu
-        Advanced bouncing, (missing incoming trajectory part)
+        Advanced bouncing, has incoming trajectory
 
     Options menu:
         Implemented difficulty selection "Hard" or "Easy". Stored in difficulty variable. 0 for easy, 1 for hard
         Select player paddle speed
         Menu to select 1 or 2 player mode
+    
+    Higscore menu:
+        Highscore screen after 1-player game for name input, 3 letters
 
 
 Needs to be implemented:
     Gameplay:
-        Advanced bouncing, (missing incoming trajectory part)
         
     
     Options menu:
         
 
-    
     Highscore menu:
-        Highscore screen after 1-player game for name input, 3 letters
+        
 
 
 Would be nice to do:
@@ -32,7 +33,6 @@ Would be nice to do:
     as of right now (it works I guess) menu.c
 
 Bugs:
-    A bug when paddles are in a certain spot, the lower part of the paddle crossing over y = 16 
-    and it doesnt display one pixel of the paddle
+    No known right now
 
 
