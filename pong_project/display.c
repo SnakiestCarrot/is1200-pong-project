@@ -81,6 +81,19 @@ void display_string(int line, char *s) {
 			textbuffer[line][i] = ' ';
 }
 
+/* display4Strings:
+
+  Takes 4 strings as input and writes them to the corresponding line
+  on the display, then updates the display so the display actually shows the strings
+*/
+void display4Strings ( char *line0, char *line1, char *line2, char *line3 ) {
+  display_string(0, line0);
+  display_string(1, line1);
+  display_string(2, line2);
+  display_string(3, line3);
+  display_update();
+}
+
 void display_image(int x, const uint8_t *data) {
 	int i, j;
 	
@@ -200,11 +213,7 @@ void displayClr ( void ) {
 }
 
 void displayCredits ( void ) {
-  display_string(0, "Made by:");
-  display_string(1, "August Wikdahl");
-  display_string(2, "Casper");
-  display_string(3, "Johansson");
-  display_update();
+  display4Strings("Made by;", "August Wikdahl", "Casper", "Johansson");
   quicksleep(30000000);
 }
 
@@ -228,13 +237,7 @@ char *scoreToStr (int scoreLeft, int scoreRight) {
 }
 
 void displayGameScore ( void ) {
-  scoreToStr(scoreLeft, scoreRight);
-  display_string(0, "    L    R");
-  display_string(1, scoreToStr(scoreLeft, scoreRight));
-  display_string(2, "");
-  display_string(3, "");
-  display_update();
-  
+  display4Strings("    L    R", scoreToStr(scoreLeft, scoreRight),"","");
   quicksleep(10000000);
 }
 
@@ -262,11 +265,7 @@ void displayWinnerScreen ( void ) {
 void displayCountdown ( void ) {
   displayClr();
 
-  display_string(0, "    Game will");
-  display_string(1, "    start in:");
-  display_string(2, "        3");
-  display_string(3, "");
-  display_update();
+  display4Strings("    Game will", "    start in:", "        3", "");
 
   quicksleep(6000000);
 

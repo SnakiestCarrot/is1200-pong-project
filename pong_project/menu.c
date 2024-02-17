@@ -31,30 +31,18 @@ double ballMaxSpeed = 85.0 / 60.0;
     Displays the menu that the game starts at
 */
 void displaySplashMenu ( void ) {
-  display_string(0, "1: Play");
-  display_string(1, "2: HiScores");
-  display_string(2, "3: Options");
-  display_string(3, "4: Back");
-  display_update();
+  display4Strings("1: Play", "2: HiScores", "3: Options", "4: Back");
 }
 
 /*displayHiScoreMenu:
     Displays the menu for highscores
 */
 void displayHiScoreMenu ( void ) {
-  display_string(0, highscorename1); // TODO: placeholders for now
-  display_string(1, highscorename2);
-  display_string(2, highscorename3);
-  display_string(3, "4: Back");
-  display_update();
+  display4Strings(highscorename1, highscorename2, highscorename3, "4: Back");
 }
 
 void displayOptionsMenu ( void ) {
-  display_string(0, difficultyStr[difficulty]);
-  display_string(1, ballStr);
-  display_string(2, playerModeStr[playerMode]);
-  display_string(3, "4: Back");
-  display_update();
+  display4Strings(difficultyStr[difficulty], ballStr, playerModeStr[playerMode], "4: Back");
 }
 
 int splashMenu = 0;

@@ -53,11 +53,8 @@ void highScoreInput ( char inputName[] ) {
     int exit = 1;
 
     while ( exit ) {
-        display_string(0, "Input your name:");
-        display_string(1, name);
-        display_string(2, "");
-        display_string(3, "1: save");
-        display_update();
+
+        display4Strings("Input your name:", name, "", "1: save");
 
         if (btn4pressed()) {
             name[6] = (name[6] == 'Z' ? ('A') : (name[6] + 1));
@@ -82,11 +79,7 @@ void highScoreInput ( char inputName[] ) {
     inputName[0] = name[6];
     inputName[1] = name[7];
     inputName[2] = name[8];
-    display_string(0, "");
-    display_string(1, "     saved!");
-    display_string(2, "");
-    display_string(3, "");
-    display_update();
+    display4Strings("", "     saved!", "", "");
     quicksleep(10000000);
 }
 
