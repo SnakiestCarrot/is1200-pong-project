@@ -25,6 +25,9 @@
 const int pageWidth = 128;
 const int pageHeight = 8;
 
+// Change this to make ball larger, measured in pixels
+int ballSize = 2;
+
 
 uint8_t spi_send_recv(uint8_t data) {
 	while(!(SPI2STAT & 0x08));
@@ -121,14 +124,6 @@ void display_update(void) {
 	}
 }
 
-
-
-/*
-  displayPixel:
-  Writes a pixel into the display buffer at the specified x and y coordinates on the OLED display
-
-  Made by Casper Johansson
-*/
 void displayPixel (int xPos, int yPos) {
   
   /*
@@ -162,13 +157,30 @@ void displayPixel (int xPos, int yPos) {
   return;
 }
 
-void displayBall (double ballX, double ballY) {
-  displayPixel(ballX, ballY);
-  displayPixel(ballX + 1, ballY);
-  displayPixel(ballX, ballY + 1);
-  displayPixel(ballX + 1, ballY + 1);
+/*
+  Writes a ball ((ballSize)x(ballSize) pixels) with its upper left corner
+  on the specified x and y coordinates into the display buffer
+
+  Made by Casper Johansson
+*/
+void displayBall (double x, double y) {
+  int i, j;
+  int ballX = (int) x; // casting solves visual bug
+  int ballY = (int) y; // casting solves visual bug
+  for (i = 0; i < ballSize; i++) {
+    for (j = 0; j < ballSize; j++) {
+      displayPixel(ballX + j, ballY + i);
+    }
+  }
 }
 
+/*
+  Writes a paddle into the display buffer with its
+  top-most pixel on the specified x and y coordinates
+  into the display buffer
+
+  Made by Casper Johansson
+*/
 void displayPaddle (double x, double y) {
   // typecasting here solves a rare bug
   int paddleX = (int) x;

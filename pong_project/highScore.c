@@ -27,6 +27,8 @@ int highScore3 = 0;
 /*
     Copies a string on the format of the highscore strings
 
+    Input assumed to be a char[7] with a terminating null character
+
     Made by August Wikdahl
 */
 void copyHighscoreString (char destination[], char source[]) {
@@ -47,8 +49,6 @@ void copyHighscoreString (char destination[], char source[]) {
     Made by Casper Johansson
 */
 void highScoreInput ( char inputName[] ) {
-
-    
     char name[] = "      AAA"; // spaces to center text
     int exit = 1;
 
@@ -90,13 +90,10 @@ void highScoreInput ( char inputName[] ) {
     quicksleep(10000000);
 }
 
-
 /*
     Handles the highscore after a finished game.
 */
 void highScoreHandler (int leftScore, int RightScore) {
-
-    
     int scoreDelta = (scoreLeft - scoreRight);
 
     char firstLeft = (char)((scoreDelta / 10) + 48);

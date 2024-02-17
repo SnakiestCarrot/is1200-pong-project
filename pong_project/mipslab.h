@@ -64,7 +64,7 @@ extern int menuState;
    IMPORTANT: It does not actually update the display, so displayImage(0, displayBuffer)
    needs to be called in order to actually display the written pixels on the screen
 
-   Written by Casper Johansson
+   Made by Casper Johansson
 */
 void displayPixel ( int xPos, int yPos );
 
@@ -75,7 +75,7 @@ void displayPixel ( int xPos, int yPos );
    Useful for after we have sent a displayBuffer to the screen, in order to remove any
    leftovers from the previous game updates displayBuffer writes.
 
-   Written by Casper Johansson
+   Made by Casper Johansson
 */
 void displayClr ( void );
 

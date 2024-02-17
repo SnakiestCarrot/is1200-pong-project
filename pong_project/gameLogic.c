@@ -264,17 +264,6 @@ void gameLoop ( void ) {
       else {
         paddleL.speedY = 0;
       }
-
-      //function for updating all positions:
-      // void updatePosition(struct object) {
-      //   object.posX += object.speedx;
-      //   object.posY += object.speedY;
-      // }
-
-      //Update next statements to:
-      //updatePosition(gameBall1);
-      //updatePosition(paddleR);
-      //updatePosition(paddleL);
    
       // Ball position update
       gameBall.posX += gameBall.speedX;
