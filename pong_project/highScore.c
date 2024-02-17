@@ -4,15 +4,37 @@
 #include "mipslab.h"  /* Declatations for these labs */
 #include <math.h>
 
+/*
+    Part of the advanced requirements to have highscores.
+
+    The game tracks 3 highscores, where the user upon beating
+    a previous top 3 score, can input their name (3 capital letters)
+    and it will be saved in the "HiScores" submenu on the splashscreen.
+    The saving of highscores is volatile, they will be reset if
+    the system memory loses power.
+*/
+
+// Placeholder highscore strings, these will be modified in highScoreHandler
 char highscorename1[] = "XXX 00";
 char highscorename2[] = "YYY 00";
 char highscorename3[] = "ZZZ 00";
 
+// All highscores initialized to 0
 int highScore1 = 0;
 int highScore2 = 0;
 int highScore3 = 0;
 
+/*
+    Takes a string as input and modifies the fields (chars) corresponding
+    to the highscore name and highscore itself.
+
+    Input assumed to be a char[7] with a terminating null character
+
+    Modifies the input string directly.
+*/
 void highScoreInput ( char inputName[] ) {
+
+    
     char name[] = "      AAA"; // spaces to center text
     int exit = 1;
 
@@ -66,7 +88,13 @@ void highScoreInput ( char inputName[] ) {
     
 // } 
 
+
+/*
+    Handles the highscore after a finished game.
+*/
 void highScoreHandler (int leftScore, int RightScore) {
+
+    
     int scoreDelta = (scoreLeft - scoreRight);
 
     char firstLeft = (char)((scoreDelta / 10) + 48);

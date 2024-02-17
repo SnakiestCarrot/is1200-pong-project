@@ -15,8 +15,6 @@
 #include "mipslab.h"  /* Declatations for these labs */
 #include <math.h>
 
-
-
 /* Interrupt Service Routine */
 void user_isr( void )                   // called from vectors.S which handles interrupts
 {
@@ -24,7 +22,7 @@ void user_isr( void )                   // called from vectors.S which handles i
 }
 
 /* Lab-specific initialization goes here */
-void labinit( void )
+void pongInit( void )
 {
   // port E init
   TRISE = ~(0xff);                   // set first 8 bits as output
@@ -41,16 +39,3 @@ void labinit( void )
 
   displaySplashMenu();
 }
-
-// registers v0 and v1 are used for returning function values so btn and sw will be put there
-
-// the three device registers TRISE is the actual values that control the behaviour,
-// TRISESET is a place in memory to affect TRISE, andd it will set TRISE corresponding
-// bits to 1 if TRISESET bit is 1. TRISECLR is the opposite, it will clear bits set to 1 in
-// TRISECLR in TRISE
-
-// when we press btn2 and btn3 at the same time the expected behaviour 
-// according to the assignment happens
-// this is because we were told to make it that way and its because each condition for the buttons 
-// are non dependent on each other so each time digit can be changed separetely
-

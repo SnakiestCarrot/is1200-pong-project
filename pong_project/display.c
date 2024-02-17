@@ -25,15 +25,6 @@
 const int pageWidth = 128;
 const int pageHeight = 8;
 
-/* quicksleep:
-   A simple function to create a small delay.
-   Very inefficient use of computing resources,
-   but very handy in some special cases. */
-void quicksleep(int cyc) {
-	int i;
-	for(i = cyc; i > 0; i--);
-}
-
 
 uint8_t spi_send_recv(uint8_t data) {
 	while(!(SPI2STAT & 0x08));
@@ -130,20 +121,7 @@ void display_update(void) {
 	}
 }
 
-/* 
-  twoPower:
-  takes an int y as input and returns 2^y
 
-  Made by Casper Johansson
-*/
-int twoPower (int y) {
-  int result = 1;
-  int i = 0;
-  for (i = 1; i <= y; i++) {
-    result *= 2;
-  }
-  return result;
-}
 
 /*
   displayPixel:
@@ -249,32 +227,24 @@ void displayGameScore ( void ) {
 }
 
 void displayWinnerScreen ( void ) {
+    display_string(1, scoreToStr(scoreLeft, scoreRight));
+    display_string(2, "");
+    display_string(3, "");
+    
     if (scoreLeft > scoreRight) {
         display_string(0, "   Left wins!");
-        display_string(1, scoreToStr(scoreLeft, scoreRight));
-        display_string(2, "");
-        display_string(3, "");
-        display_update();
-        quicksleep(10000000);
     }
 
     else if (scoreLeft < scoreRight) {
         display_string(0, "  Right wins!");
-        display_string(1, scoreToStr(scoreLeft, scoreRight));
-        display_string(2, "");
-        display_string(3, "");
-        display_update();
-        quicksleep(10000000);
     }
 
     else {
         display_string(0, " It's a draw!");
-        display_string(1, scoreToStr(scoreLeft, scoreRight));
-        display_string(2, "");
-        display_string(3, "");
-        display_update();
-        quicksleep(10000000);
     }
+
+    display_update();
+    quicksleep(10000000);
 }
 
 void displayCountdown ( void ) {
