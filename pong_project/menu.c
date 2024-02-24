@@ -4,6 +4,8 @@
 #include "mipslab.h"  /* Declatations for these labs */
 #include <math.h>
 
+/*Menu handling and display written by Casper Johansson*/
+
 // Used for difficulty selection menu
 char difficultyStr[2][16] = {
     "AI: Easy", "AI: Hard"
@@ -135,7 +137,7 @@ void menuHandler ( void ) {
 
         // changes player mode
         if (btn3pressed()) {
-            playerMode = (playerMode == 0 ? 1 : 0); // toggles players paddle speed
+            playerMode = (playerMode == 0 ? 1 : 0); // toggles player mode
 
             display_string(2, playerModeStr[playerMode]);
             display_update();

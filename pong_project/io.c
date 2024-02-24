@@ -4,6 +4,10 @@
 #include "mipslab.h"
 #include <math.h>
 
+/*Functions for Input.
+Written by August Wikdahl and Casper Johansson from previous labs, 
+reused for the mini project*/
+
 // returns switch 1-4 in bits 0-3
 /*getsw:
 Returns bits for switches 1-4 in bits 0-3

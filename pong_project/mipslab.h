@@ -133,3 +133,42 @@ void highScoreHandler ( int, int );
 void quicksleep ( int );
 
 int twoPower ( int );
+
+double calculateBounceAngle ();
+
+int ballPaddleCollide ();
+
+void playerMode2( void );
+
+void playerMode3( void );
+
+void gameStateInit( void );
+
+/*
+  struct to track ball parameters
+*/ 
+struct Ball {
+  double posX;
+  double posY;
+  double speedX;
+  double speedY;
+};
+
+
+/*
+  struct for the paddles
+*/
+struct Paddle {
+  double posX;
+  double posY;
+  double speedX;
+  double speedY;
+  int height;
+};
+
+struct Ball gameBall;
+struct Paddle paddleL;
+struct Paddle paddleR;
+
+extern double trajectoryModifier;
+extern int ballTrajectoryAffectsGameplay;

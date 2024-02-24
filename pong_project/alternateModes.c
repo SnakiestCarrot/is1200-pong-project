@@ -6,103 +6,22 @@
 #include <math.h>
 
 /*
- gameLogic.c
-
- Handles logic of the game, such as movement, positions, collisions etc. 
-
- Made by Casper Johansson and August Wikdahl
- except where specified.
+Logic for game mode 3 and 4.
+By August Wikdahl
 */
 
-// set the default paddle height here
-int defaultPaddleHeight = 8;
 
-// creating ball and paddles
-struct Ball gameBall;
-struct Paddle paddleR;
-struct Paddle paddleL;
+//Ball bounces faster and faster
+//
+void playerMode2( void ){
+    double extraspeed = 1.0;
+    ballMaxSpeed = 1.0;
+    
+    int timeoutcount = 0;
 
-// Tracks the score for the left side paddle (Player)
-int scoreLeft = 0;
+    gameStateInit();
 
-// Tracks the score for the right side paddle (Player or AI)
-int scoreRight = 0;
-
-// Decides at what score to end the game
-int scoreLimit = 10;
-
-// Determines the sensitivity of the ball bouncing of the paddles
-// it is essentially the maximum angle the ball can bounce at from horizontal
-const double bounciness = (1.2 * 3.1415) / 5;
-
-// Uses the Y speed of the ball to modify the final angle of reflection of the ball
-// We can use only the Y speed since we have the constant speed of the balls total vector (ballMaxSpeed)
-// from a gameplay perspective it is not very good, but it is a requirement for an advanced project
-// The shallower the angle the less effect it will have
-int ballTrajectoryAffectsGameplay = 1; // turn on or off if the ball trajectory affects gameplay
-double trajectoryModifier;
-
-// Determines the maximum speed at which the ball will 
-// travel at as a combined speed for the x and y vectors.
-double ballMaxSpeed;
-
-// Hitbox safety margin
-double hitboxSize = 1.0;
-
-// Initializes variables changed inside the game loop
-// By Casper Johansson
-void gameStateInit ( void ) {
-  gameBall.posX = 64.0;
-  gameBall.posY = 16.0;
-  gameBall.speedX = -40.0 / 60.0;
-  gameBall.speedY = 0.0 / 60.0;
-
-  paddleR.posX = 120;
-  paddleR.posY = 16;
-  paddleR.speedX = 0;
-  paddleR.speedY = 0;
-  paddleR.height = defaultPaddleHeight;
-  
-  paddleL.posX = 8;
-  paddleL.posY = 16;
-  paddleL.speedX = 0;
-  paddleL.speedY = 0;
-  paddleL.height = defaultPaddleHeight;
-}
-
-//Function for calculating bounce angle
-double calculateBounceAngle (struct Paddle *p, struct Ball *b){
-  double relativeY = ((p->posY) + ((p->height)/2)) - (b->posY);
-  double intersectCoefficient = (relativeY / ((p->height) / 2)) * trajectoryModifier;
-  double bounceAngle = intersectCoefficient * bounciness;
-  return bounceAngle;
-}
-
-//Function for detecting ball and paddle collision
-int ballPaddleCollide (struct Paddle *p, struct Ball *b){
-  int ballPaddleXCollide = ((p->posX) - hitboxSize <= (b->posX) + hitboxSize &&
-                              (p->posX) + hitboxSize >= (b->posX) - hitboxSize);
-  int ballPaddleYCollide = (((p->posY) - hitboxSize <= (b->posY) + hitboxSize) &&
-                              ((p->posY) + (p->height) + hitboxSize) >= (b->posY) - hitboxSize);
-
-  int ballPaddleCollision = ballPaddleXCollide && ballPaddleYCollide;
-  return ballPaddleCollision;
-}
-
-void gameLoop ( void ) {
-  //Temporary to test player modes - need to update options menu
-  playerMode = 2;
-
-  if (playerMode = 2){
-    playerMode2();
-  }
-
-  int timeoutcount = 0;
-
-  gameStateInit();
-  
-  //2 player and AI-mode.
-  while (getsw() != 0x1 && (scoreLeft < scoreLimit && scoreRight < scoreLimit)) {
+    while (getsw() != 0x1) {
 
     // usage of the timer from lab 3
     if (IFS(0) & 0x100) {
@@ -119,23 +38,18 @@ void gameLoop ( void ) {
       // Ball and wall collision detection
       if (gameBall.posX >= 127) {
         scoreLeft++;
-        displayGameScore();
         gameStateInit();
       } 
       else if (gameBall.posX < 0) {
         scoreRight++;
-        displayGameScore();
         gameStateInit();
       }
 
       // collision with upper and lower borders
-      // if statements are split and pos updated in order to fix a bug
-      // where the ball would sometimes go out of bounds
       if (gameBall.posY < 0) {
         gameBall.posY = 0.0;
         gameBall.speedY *= -1;
       }
-
       if (gameBall.posY >= 31) {
         gameBall.posY = 31.0;
         gameBall.speedY *= -1;
@@ -164,17 +78,20 @@ void gameLoop ( void ) {
         trajectoryModifier = 1.0;
       }
 
+    // Now adds speed at every paddle bounce.
       //Right Paddle Collision
       if (ballPaddleCollide(&paddleR, &gameBall)) {
+        extraspeed += 0.1;
         // Angle calculation 
         double bounceAngle = calculateBounceAngle(&paddleR, &gameBall);
         // New speeds
-        gameBall.speedX = -ballMaxSpeed * cos(bounceAngle);
-        gameBall.speedY = ballMaxSpeed * -sin(bounceAngle);
+        gameBall.speedX = -ballMaxSpeed * (cos(bounceAngle));
+        gameBall.speedY = ballMaxSpeed * (-sin(bounceAngle));
       }
 
       //Left Paddle Collision
       if (ballPaddleCollide(&paddleL, &gameBall)) {
+        extraspeed += 0.1;
         // Angle calculation
         double bounceAngle = calculateBounceAngle(&paddleL, &gameBall);
         // New speeds
@@ -192,7 +109,7 @@ void gameLoop ( void ) {
       }
       
       // Right paddle movement for AI
-      if (playerMode == 1) {
+      if (playerMode == 2) {
         int yPosCheck = gameBall.posY > paddleR.posY + (paddleR.height / 2);
         int boundsCheckUpper = paddleR.posY > -1;
         int boundsCheckLower = (paddleR.posY + 4) < 32;
@@ -235,7 +152,7 @@ void gameLoop ( void ) {
       }
    
       // Ball position update
-      gameBall.posX += gameBall.speedX;
+      gameBall.posX += (gameBall.speedX * extraspeed);
       gameBall.posY += gameBall.speedY;
 
       // Right paddle position update
@@ -258,19 +175,10 @@ void gameLoop ( void ) {
       timeoutcount = 0;
     }
   }
-  
-  displayWinnerScreen();
-  if (playerMode == 1) {
-    highScoreHandler(scoreLeft, scoreRight);
-  }
-  
-  // Reset scores
-  scoreLeft = 0;
-  scoreRight = 0;
-
-  // Set menustate to splashmenu
-  displaySplashMenu();
-  menuState = 0;
-  quicksleep(5000000);
 }
 
+
+//More balls at every bounce
+void playerMode3( void ){
+
+}
