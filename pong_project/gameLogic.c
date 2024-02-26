@@ -11,7 +11,6 @@
  Handles logic of the game, such as movement, positions, collisions etc. 
 
  Made by Casper Johansson and August Wikdahl
- except where specified.
 */
 
 // set the default paddle height here
@@ -88,14 +87,31 @@ int ballPaddleCollide (struct Paddle *p, struct Ball *b){
   int ballPaddleCollision = ballPaddleXCollide && ballPaddleYCollide;
   return ballPaddleCollision;
 }
-
 void gameLoop ( void ) {
-  //Temporary to test player modes - need to update options menu
-  playerMode = 2;
-
-  if (playerMode = 2){
+  
+  /*Alternate game modes, found in alternateModes.c*/
+  //Increasing speed
+  if (playerMode == 2){
     playerMode2();
+
+    // Set menustate to splashmenu
+    displaySplashMenu();
+    menuState = 0;
+    quicksleep(5000000);
+    return;
   }
+  
+  //Multiple balls
+  if (playerMode == 3){
+    playerMode3();
+
+    // Set menustate to splashmenu
+    displaySplashMenu();
+    menuState = 0;
+    quicksleep(5000000);
+    return;
+  }
+
 
   int timeoutcount = 0;
 

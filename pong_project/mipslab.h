@@ -172,3 +172,4 @@ struct Paddle paddleR;
 
 extern double trajectoryModifier;
 extern int ballTrajectoryAffectsGameplay;
+
