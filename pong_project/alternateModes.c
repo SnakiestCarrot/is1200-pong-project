@@ -182,11 +182,12 @@ void playerMode3( void ){
     balls[0] = &ball1;
     balls[1] = &ball2;
     balls[2] = &ball3;
-    ///balls[3] = &ball4;
-    //balls[4] = &ball5;
+    balls[3] = &ball4;
+    balls[4] = &ball5;
 
     //Starting ball amount
-    int noOfBalls = 1;    
+    int noOfBalls = 1; 
+    int maxBalls = 3;   
     
     int timeoutcount = 0;
 
@@ -260,7 +261,7 @@ void playerMode3( void ){
 
           balls[i]->speedX = -ballMaxSpeed * (cos(bounceAngle));
           balls[i]->speedY = ballMaxSpeed * (-sin(bounceAngle));  
-          if (noOfBalls < 3){
+          if (noOfBalls < maxBalls){
             noOfBalls ++;
           }
         }
@@ -271,7 +272,7 @@ void playerMode3( void ){
 
           balls[i]->speedX = ballMaxSpeed * cos(bounceAngle);
           balls[i]->speedY = ballMaxSpeed * -sin(bounceAngle);
-          if (noOfBalls < 3){
+          if (noOfBalls < maxBalls){
             noOfBalls ++;
           }
         }

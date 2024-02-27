@@ -173,3 +173,4 @@ struct Paddle paddleR;
 extern double trajectoryModifier;
 extern int ballTrajectoryAffectsGameplay;
 
+void displayBall (double x, double y);
