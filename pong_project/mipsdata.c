@@ -147,7 +147,7 @@ const uint8_t const font[] = {
 
 	This is what we modify in order to draw pixels and such during gameplay
 
-	Made by Casper Johansson
+	Made by Casper Johansson and August Wikdahl
 */
 uint8_t displayBuffer[] = {
 

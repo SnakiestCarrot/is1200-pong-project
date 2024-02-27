@@ -1,7 +1,9 @@
 /* mipslabfunc.c
    This file written 2015 by F Lundevall
    Some parts are original code written by Axel Isaksson
-   Updated for Pong Project by Casper Johansson and August Wikdahl 2024
+   Updated for Pong Project 
+   by Casper Johansson and August Wikdahl 2024
+   except where specified.
 
    For copyright and licensing, see file COPYING */
 
@@ -84,6 +86,7 @@ void display_string(int line, char *s) {
 
   Takes 4 strings as input and writes them to the corresponding line
   on the display, then updates the display so the display actually shows the strings
+  Made by Casper Johansson.
 */
 void display4Strings ( char *line0, char *line1, char *line2, char *line3 ) {
   display_string(0, line0);
@@ -136,6 +139,10 @@ void display_update(void) {
 	}
 }
 
+//Takes x and y-coordinate for a pixel and puts it in the display buffer.
+//Inspired by "draw pixel"-function in github project by Alexander Lundqvist.
+//https://github.com/AlexanderLundqvist/IS1200/blob/main/Project/mipslabfunc.c
+//link last fetched at 27/2 - 2024.
 void displayPixel (int xPos, int yPos) {
   
   
@@ -217,6 +224,8 @@ void displayCredits ( void ) {
 
 char scoreStr[] = "       -  ";
 
+//Function to update the score-string from the integer scores.
+//Made by August Wikdahl and Casper Johansson.
 char *scoreToStr (int scoreLeft, int scoreRight) {
   
   char firstLeft = (char)((scoreLeft / 10) + 48);
@@ -234,11 +243,13 @@ char *scoreToStr (int scoreLeft, int scoreRight) {
   return scoreStr;
 }
 
+//Displaying the score
 void displayGameScore ( void ) {
   display4Strings("    L    R", scoreToStr(scoreLeft, scoreRight),"","");
   quicksleep(10000000);
 }
 
+//Displaying winner at the end of game
 void displayWinnerScreen ( void ) {
     display_string(1, scoreToStr(scoreLeft, scoreRight));
     display_string(2, "");
@@ -260,6 +271,8 @@ void displayWinnerScreen ( void ) {
     quicksleep(10000000);
 }
 
+//Display countdown before match
+//Made by Casper Johansson
 void displayCountdown ( void ) {
   displayClr();
 

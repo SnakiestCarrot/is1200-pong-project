@@ -14,7 +14,9 @@
 /* quicksleep:
    A simple function to create a small delay.
    Very inefficient use of computing resources,
-   but very handy in some special cases. */
+   but very handy in some special cases. 
+   Made by Casper Johansson
+   */
 void quicksleep(int cyc) {
 	int i;
 	for(i = cyc; i > 0; i--);

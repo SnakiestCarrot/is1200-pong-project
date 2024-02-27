@@ -12,6 +12,8 @@
     and it will be saved in the "HiScores" submenu on the splashscreen.
     The saving of highscores is volatile, they will be reset if
     the system memory loses power.
+    Made by Casper Johanson and August Wikdahl
+    except where specified.
 */
 
 // Placeholder highscore strings, these will be modified in highScoreHandler
@@ -85,6 +87,7 @@ void highScoreInput ( char inputName[] ) {
 
 /*
     Handles the highscore after a finished game.
+    Made by Casper Johansson and August Wikdahl.
 */
 void highScoreHandler (int leftScore, int RightScore) {
     int scoreDelta = (scoreLeft - scoreRight);
