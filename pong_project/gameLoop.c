@@ -7,24 +7,39 @@
 
 
 /*
-Logic for game mode 3 and 4.
-By August Wikdahl, reusing code written by 
-August and Casper Johansson for game logic.
+Game Loop for all game modes.
+Written By Casper Johansson and August Wikdahl.
 */
 
 
-//Ball bounces faster and faster
-void playerMode2( void ){
-    double extraspeed = 1.0;
+//Main game loop for player modes 0-2.
+//0: Normal 2-Player Mode
+//1: 1-Player Mode
+//2: 2-Player Mode with increasing ball speeds
+void gameLoop ( void ) {
+
+  //Separate game loop for player mode 3.
+  if (playerMode == 3){
+    playerMode3();
+
+    // Set menustate to splashmenu
+    displaySplashMenu();
+    menuState = 0;
+    quicksleep(5000000);
+    return;
+  }
+
+  //Sets a slower base speed to player mode 2.
+  if (playerMode == 2){
     ballMaxSpeed = 1.0;
-    int stop = 0;
-    int i;
-    
-    int timeoutcount = 0;
+  }
 
-    gameStateInit();
+  int timeoutcount = 0;
 
-    while (getsw() != 0x1 && stop == 0) {
+  gameStateInit();
+  
+  //Game Loop
+  while (getsw() != 0x1 && (scoreLeft < scoreLimit && scoreRight < scoreLimit)) {
 
     // usage of the timer from lab 3
     if (IFS(0) & 0x100) {
@@ -35,30 +50,35 @@ void playerMode2( void ){
     // When timer gives an interrupt, do a game update
     if (timeoutcount == 1) {
       
+      // Clear displayBuffer from previous screen
       displayClr();
 
       // Ball and wall collision detection
       if (gameBall.posX >= 127) {
         scoreLeft++;
-        stop = 1;
+        displayGameScore();
+        gameStateInit();
       } 
       else if (gameBall.posX < 0) {
         scoreRight++;
-        stop = 1;
-  
+        displayGameScore();
+        gameStateInit();
       }
 
       // collision with upper and lower borders
+      // if statements are split and pos updated in order to fix a bug
+      // where the ball would sometimes go out of bounds
       if (gameBall.posY < 0) {
         gameBall.posY = 0.0;
         gameBall.speedY *= -1;
       }
+
       if (gameBall.posY >= 31) {
         gameBall.posY = 31.0;
         gameBall.speedY *= -1;
       }
 
-      // Paddles and wall collison detection
+      // Right paddle and wall collison detection
       if (paddleR.posY < 0) {
         paddleR.posY = 0;
       } 
@@ -66,6 +86,7 @@ void playerMode2( void ){
         paddleR.posY = 32 - (paddleR.height + 1);
       }
 
+      // Left paddle and wall collison detection
       if (paddleL.posY < 0) {
         paddleL.posY = 0;
       } 
@@ -80,25 +101,32 @@ void playerMode2( void ){
         trajectoryModifier = 1.0;
       }
 
-      /* Update : Now adds speed at every paddle bounce.*/
       //Right Paddle Collision
       if (ballPaddleCollide(&paddleR, &gameBall)) {
-        extraspeed += 0.1;
-
+        // Angle calculation 
         double bounceAngle = calculateBounceAngle(&paddleR, &gameBall);
+        // New speeds
+        gameBall.speedX = -ballMaxSpeed * cos(bounceAngle);
+        gameBall.speedY = ballMaxSpeed * -sin(bounceAngle);
 
-        gameBall.speedX = -ballMaxSpeed * (cos(bounceAngle));
-        gameBall.speedY = ballMaxSpeed * (-sin(bounceAngle));
+        //Adds speed at mode 2
+        if (playerMode == 2){
+          accelerator += 0.1;
+        }
       }
 
       //Left Paddle Collision
       if (ballPaddleCollide(&paddleL, &gameBall)) {
-        extraspeed += 0.1;
-
+        // Angle calculation
         double bounceAngle = calculateBounceAngle(&paddleL, &gameBall);
-
+        // New speeds
         gameBall.speedX = ballMaxSpeed * cos(bounceAngle);
         gameBall.speedY = ballMaxSpeed * -sin(bounceAngle);
+
+        //Adds speed at mode 2
+        if (playerMode == 2){
+          accelerator += 0.1;
+        }
       }
 
       // Change the AI difficulty by changing its movement speed
@@ -110,8 +138,27 @@ void playerMode2( void ){
         paddleSpeedAI = 45.0;
       }
       
+      // Right paddle movement for AI
+      if (playerMode == 1) {
+        int yPosCheck = gameBall.posY > paddleR.posY + (paddleR.height / 2);
+        int boundsCheckUpper = paddleR.posY > -1;
+        int boundsCheckLower = (paddleR.posY + 4) < 32;
+
+        // Will wait until the player hits the paddle
+        int waitForHit = gameBall.speedX > 0;
+
+        if (yPosCheck && boundsCheckUpper && waitForHit) {
+          paddleR.speedY = paddleSpeedAI / 60.0;
+        } 
+        else if (~yPosCheck && boundsCheckLower && waitForHit) {
+          paddleR.speedY = -paddleSpeedAI / 60.0;
+        } 
+        else {
+          paddleR.speedY = 0;
+        }
+      } 
       // Paddle movement for player
-      if (playerMode == 2) {
+      else if ((playerMode == 0) || (playerMode == 2)) {
         if (btn2pressed() && paddleR.posY > -1) {
           paddleR.speedY = paddleSpeed / 60.0;
         } 
@@ -134,9 +181,9 @@ void playerMode2( void ){
         paddleL.speedY = 0;
       }
    
-      /*Update : Now moves with increasing speed*/
-      gameBall.posX += (gameBall.speedX * extraspeed);
-      gameBall.posY += (gameBall.speedY);
+      // Ball position update
+      gameBall.posX += (gameBall.speedX * accelerator);
+      gameBall.posY += gameBall.speedY;
 
       // Right paddle position update
       paddleR.posX += paddleR.speedX;
@@ -158,42 +205,45 @@ void playerMode2( void ){
       timeoutcount = 0;
     }
   }
-
+  
   displayWinnerScreen();
+  if (playerMode == 1) {
+    highScoreHandler(scoreLeft, scoreRight);
+  }
+  
   // Reset scores
   scoreLeft = 0;
   scoreRight = 0;
+
+  // Set menustate to splashmenu
+  displaySplashMenu();
+  menuState = 0;
+  quicksleep(5000000);
 }
 
 
-//More balls at every bounce
+
+//Separate loop for Player Mode 3, using multiple balls.
+//by August Wikdahl, reusing some code from main game loop
 void playerMode3( void ){
-    ballMaxSpeed = 1.0;
-    int stop = 0;
-    int i;
+    ballMaxSpeed = 0.5;
 
     /*Multiple balls*/
-    struct Ball *balls[5];
-    struct Ball ball1 = {64.0, 16.0, -0.5, 0.0};
-    struct Ball ball2 = {64.0, 16.0, 0.4, 0.0};
-    struct Ball ball3 = {64.0, 16.0, -0.3, 0.0};
-    struct Ball ball4 = {64.0, 16.0, 0.2, 0.0};
-    struct Ball ball5 = {64.0, 16.0, -0.1, 0.0};
     balls[0] = &ball1;
     balls[1] = &ball2;
     balls[2] = &ball3;
     balls[3] = &ball4;
     balls[4] = &ball5;
+    ballsInit();
 
-    //Starting ball amount
-    int noOfBalls = 1; 
-    int maxBalls = 3;   
+    //Set maximum amount of balls
+    //3 seems to be the sweetspot for difficulty yet playable (and bug-free)
+    maxBalls = 3;   
     
     int timeoutcount = 0;
-
     gameStateInit();
 
-    while (getsw() != 0x1 && stop == 0) {
+    while (getsw() != 0x1 && (scoreLeft < scoreLimit && scoreRight < scoreLimit)) {
 
     // usage of the timer from lab 3
     if (IFS(0) & 0x100) {
@@ -210,11 +260,15 @@ void playerMode3( void ){
       for (i = 0; i < noOfBalls; i++){
         if (balls[i]->posX >= 127) {
           scoreLeft++;
-          stop = 1;
+          displayGameScore();
+          gameStateInit();
+          ballsInit();
         }
         else if (balls[i]->posX < 0) {
           scoreRight++;
-          stop = 1;
+          displayGameScore();
+          gameStateInit();
+          ballsInit();
         }
       }
 

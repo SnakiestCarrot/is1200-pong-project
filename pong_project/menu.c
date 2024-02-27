@@ -4,7 +4,9 @@
 #include "mipslab.h"  /* Declatations for these labs */
 #include <math.h>
 
-/*Menu handling and display written by Casper Johansson*/
+/*Menu handling and display written by Casper Johansson and August Wikdahl
+    except where specified.
+*/
 
 // Used for difficulty selection menu
 char difficultyStr[2][16] = {
@@ -17,8 +19,8 @@ char ballMaxSpeedStr[2][16] = {
 };
 
 // Used for player mode selection menu
-char playerModeStr[2][16] = {
-    "2 Players", "1 Player VS AI"
+char playerModeStr[4][16] = {
+    "2 Players", "1 Player VS AI", "Increasing speed", "Multiple Balls"
 };
 
 // makes menu a bit simpler
@@ -111,6 +113,7 @@ void menuHandler ( void ) {
 
     /*
         Options menu cases
+        by Casper Johansson and August Wikdahl.
     */
     if (menuState == optionsMenu) {
         
@@ -133,11 +136,11 @@ void menuHandler ( void ) {
             display_update();
 
             quicksleep(1000000); //FIXME: same as in difficulty
-        }
+        } 
 
         // changes player mode
         if (btn3pressed()) {
-            playerMode = (playerMode == 0 ? 1 : 0); // toggles player mode
+            playerMode = (playerMode == 3 ? 0 : playerMode + 1); // toggles player mode
 
             display_string(2, playerModeStr[playerMode]);
             display_update();

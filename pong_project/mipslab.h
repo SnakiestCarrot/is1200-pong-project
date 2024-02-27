@@ -174,3 +174,17 @@ extern double trajectoryModifier;
 extern int ballTrajectoryAffectsGameplay;
 
 void displayBall (double x, double y);
+
+extern int scoreLimit;
+
+extern double accelerator;
+
+extern int i;
+
+extern int noOfBalls;
+extern int maxBalls;
+
+void ballsInit ();
+
+struct Ball ball1, ball2, ball3, ball4, ball5;
+struct Ball *balls[5];

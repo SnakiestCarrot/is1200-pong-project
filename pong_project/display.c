@@ -1,7 +1,9 @@
 /* mipslabfunc.c
    This file written 2015 by F Lundevall
    Some parts are original code written by Axel Isaksson
-   Updated for Pong Project by Casper Johansson and August Wikdahl 2024.
+   Updated for Pong Project 
+   by Casper Johansson and August Wikdahl 2024
+   except where specified.
 
    For copyright and licensing, see file COPYING */
 
@@ -138,7 +140,9 @@ void display_update(void) {
 }
 
 //Takes x and y-coordinate for a pixel and puts it in the display buffer.
-//Made by August and Casper.
+//Inspired by "draw pixel"-function in github project by Alexander Lundqvist.
+//https://github.com/AlexanderLundqvist/IS1200/blob/main/Project/mipslabfunc.c
+//link last fetched at 27/2 - 2024.
 void displayPixel (int xPos, int yPos) {
   
   
